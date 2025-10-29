@@ -1,0 +1,8 @@
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#E8E3DB"/>
+  <circle cx="200" cy="150" r="60" fill="#8B7355"/>
+  <rect x="140" y="220" width="120" height="140" rx="60" fill="#8B7355"/>
+  <text x="200" y="380" font-family="serif" font-size="16" fill="#3D3630" text-anchor="middle">Brian Le Roux</text>
+  <text x="200" y="395" font-family="serif" font-size="12" fill="#7A6F5D" text-anchor="middle" font-style="italic">Best Man</text>
+</svg>
+
