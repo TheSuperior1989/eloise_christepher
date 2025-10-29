@@ -5,7 +5,7 @@ export function PhotoSection() {
         <div className="grid md:grid-cols-2 gap-8">
           <div className="space-y-6">
             <img
-              src="/elegant-historic-southern-house-with-columns.jpg"
+              src="/assets/kwalata.jpg"
               alt="Wedding venue"
               className="w-full h-[400px] object-cover rounded-sm"
             />
@@ -19,7 +19,7 @@ export function PhotoSection() {
 
           <div className="space-y-6">
             <img
-              src="/romantic-couple-portrait-outdoor-garden-setting.jpg"
+              src="/assets/our_engagement.jpg"
               alt="Engagement photo"
               className="w-full h-[400px] object-cover rounded-sm"
             />

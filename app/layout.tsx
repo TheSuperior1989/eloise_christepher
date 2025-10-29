@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     siteName: "Eloise & Christepher's Wedding",
     images: [
       {
-        url: "/romantic-couple-portrait-outdoor-garden-setting.jpg",
+        url: "/assets/our_engagement.jpg",
         width: 1200,
         height: 630,
         alt: "Eloise & Christepher",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Eloise & Christepher - April 4, 2026",
     description: "Join us at Kwalata Game Lodge, South Africa for our wedding celebration",
-    images: ["/romantic-couple-portrait-outdoor-garden-setting.jpg"],
+    images: ["/assets/our_engagement.jpg"],
   },
   robots: {
     index: true,
