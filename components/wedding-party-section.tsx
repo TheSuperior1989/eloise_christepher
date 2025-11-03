@@ -2,16 +2,16 @@ import Image from "next/image"
 
 export function WeddingPartySection() {
   const bridalParty = [
-    { name: "Cherize Van Stade", role: "Maid of Honor", image: "/assets/wedding-party/cherize-van-stade.svg" },
-    { name: "Anieke Kelly", role: "Bridesmaid", image: "/assets/wedding-party/anieke-kelly.svg" },
-    { name: "Bianca", role: "Bridesmaid", image: "/assets/wedding-party/bianca.svg" },
+    { name: "Cherize Van Stade", role: "Maid of Honor", image: "/assets/wedding-party/cherize-van-stade.jpeg" },
+    { name: "Anieke Kelly", role: "Bridesmaid", image: "/assets/wedding-party/anieke-kelly.jpeg" },
+    { name: "Bianca", role: "Bridesmaid", image: "/assets/wedding-party/bianca.jpeg" },
   ]
 
   const groomsParty = [
-    { name: "Brian Le Roux", role: "Best Man", image: "/assets/wedding-party/brian-le-roux.svg" },
-    { name: "Jeandre Du Plessis", role: "Best Man", image: "/assets/wedding-party/jeandre-du-plessis.svg" },
-    { name: "Pieter Myburge", role: "Groomsman", image: "/assets/wedding-party/pieter-myburge.svg" },
-    { name: "Andre Bisset", role: "Groomsman", image: "/assets/wedding-party/andre-bisset.svg" },
+    { name: "Brian Le Roux", role: "Best Man", image: "/assets/wedding-party/brian-le-roux.jpeg" },
+    { name: "Jeandré Du Plessis", role: "Best Man", image: "/assets/wedding-party/jeandre-du-plessis.jpeg" },
+    { name: "Pieter Myburge", role: "Groomsman", image: "/assets/wedding-party/pieter-myburge.jpeg" },
+    { name: "André Bisset", role: "Groomsman", image: "/assets/wedding-party/andre-bisset.jpeg" },
   ]
 
   return (
