@@ -169,13 +169,13 @@ After seeding the database:
 
 ```
 Email: christiaanvonstade@gmail.com
-Password: admin123
+Password: Bike2453
 
 Email: eloisebissei@gmail.com
-Password: Tarzan@GooiMielies
+Password: Eli&Goose
 
 Email: christepher.vonstade@gmail.com
-Password: KolGans@Goosy
+Password: Eli&Goose
 ```
 
 ---
