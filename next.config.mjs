@@ -16,6 +16,9 @@ const nextConfig = {
   // Optimize bundle
   experimental: {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+    turbopack: {
+      root: process.cwd(),
+    },
   },
 }
 
