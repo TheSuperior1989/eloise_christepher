@@ -91,10 +91,13 @@ export default function LoginPage() {
             </Button>
           </form>
           <div className="mt-6 text-center text-sm text-[#7A6F5D]">
-            <p>Default credentials:</p>
-            <p className="font-mono text-xs mt-1">
-              admin1@wedding.com / admin123
-            </p>
+            <p className="mb-2">Authorized Admin Users:</p>
+            <div className="space-y-1 font-mono text-xs">
+              <p>christiaanvonstade@gmail.com</p>
+              <p>eloisebissei@gmail.com</p>
+              <p>christepher.vonstade@gmail.com</p>
+            </div>
+            <p className="mt-3 text-xs italic">Default password: admin123</p>
           </div>
         </CardContent>
       </Card>

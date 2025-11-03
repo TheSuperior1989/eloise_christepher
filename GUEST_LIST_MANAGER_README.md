@@ -39,18 +39,20 @@ A comprehensive, production-ready wedding guest list management system with auth
 
 ## 🔐 Admin Credentials
 
-Default admin accounts (change passwords in production):
+Authorized admin accounts (change passwords in production):
 
 ```
-Email: admin1@wedding.com
+Email: christiaanvonstade@gmail.com (Developer & Admin)
 Password: admin123
 
-Email: admin2@wedding.com
+Email: eloisebissei@gmail.com (Manager)
 Password: admin123
 
-Email: admin3@wedding.com
+Email: christepher.vonstade@gmail.com (Manager)
 Password: admin123
 ```
+
+**Note**: Only these three email addresses are authorized to access the admin dashboard.
 
 ## 🚀 Getting Started
 

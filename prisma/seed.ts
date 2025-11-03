@@ -1,26 +1,27 @@
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
+import crypto from 'crypto'
 
 const prisma = new PrismaClient()
 
 async function main() {
   console.log('Seeding database...')
 
-  // Create 3 admin users
+  // Create 3 admin users with real email addresses
   const adminUsers = [
     {
-      name: 'Admin 1',
-      email: 'admin1@wedding.com',
+      name: 'Christiaan von Stade',
+      email: 'christiaanvonstade@gmail.com',
       password: 'admin123',
     },
     {
-      name: 'Admin 2',
-      email: 'admin2@wedding.com',
+      name: 'Eloise Bissei',
+      email: 'eloisebissei@gmail.com',
       password: 'admin123',
     },
     {
-      name: 'Admin 3',
-      email: 'admin3@wedding.com',
+      name: 'Christepher von Stade',
+      email: 'christepher.vonstade@gmail.com',
       password: 'admin123',
     },
   ]
@@ -42,34 +43,93 @@ async function main() {
     console.log(`Created admin user: ${admin.email}`)
   }
 
-  // Create some sample guests
-  const sampleGuests = [
+  // Create wedding party members as guests
+  const weddingPartyGuests = [
+    // Bridal Party
     {
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@example.com',
-      phone: '+27 123 456 7890',
-      relationToBride: 'Friend',
+      firstName: 'Cherize',
+      lastName: 'Van Stade',
+      email: null,
+      phone: null,
+      relationToBride: 'Maid of Honor',
       relationToGroom: null,
+      invitationToken: crypto.randomBytes(32).toString('hex'),
     },
     {
-      firstName: 'Jane',
-      lastName: 'Smith',
-      email: 'jane.smith@example.com',
-      phone: '+27 123 456 7891',
+      firstName: 'Anieke',
+      lastName: 'Kelly',
+      email: null,
+      phone: null,
+      relationToBride: 'Bridesmaid',
+      relationToGroom: null,
+      invitationToken: crypto.randomBytes(32).toString('hex'),
+    },
+    {
+      firstName: 'Bianca',
+      lastName: '',
+      email: null,
+      phone: null,
+      relationToBride: 'Bridesmaid',
+      relationToGroom: null,
+      invitationToken: crypto.randomBytes(32).toString('hex'),
+    },
+    // Groom's Party
+    {
+      firstName: 'Brian',
+      lastName: 'Le Roux',
+      email: null,
+      phone: null,
       relationToBride: null,
-      relationToGroom: 'Colleague',
+      relationToGroom: 'Best Man',
+      invitationToken: crypto.randomBytes(32).toString('hex'),
+    },
+    {
+      firstName: 'Jeandré',
+      lastName: 'Du Plessis',
+      email: null,
+      phone: null,
+      relationToBride: null,
+      relationToGroom: 'Best Man',
+      invitationToken: crypto.randomBytes(32).toString('hex'),
+    },
+    {
+      firstName: 'Pieter',
+      lastName: 'Myburge',
+      email: null,
+      phone: null,
+      relationToBride: null,
+      relationToGroom: 'Groomsman',
+      invitationToken: crypto.randomBytes(32).toString('hex'),
+    },
+    {
+      firstName: 'André',
+      lastName: 'Bisset',
+      email: null,
+      phone: null,
+      relationToBride: null,
+      relationToGroom: 'Groomsman',
+      invitationToken: crypto.randomBytes(32).toString('hex'),
     },
   ]
 
-  for (const guest of sampleGuests) {
-    await prisma.guest.upsert({
-      where: { email: guest.email },
-      update: {},
-      create: guest,
+  for (const guest of weddingPartyGuests) {
+    // For guests without email, we can't use email as unique identifier
+    // So we'll check by name instead
+    const existingGuest = await prisma.guest.findFirst({
+      where: {
+        firstName: guest.firstName,
+        lastName: guest.lastName,
+      },
     })
-    
-    console.log(`Created sample guest: ${guest.firstName} ${guest.lastName}`)
+
+    if (!existingGuest) {
+      await prisma.guest.create({
+        data: guest,
+      })
+      console.log(`Created wedding party guest: ${guest.firstName} ${guest.lastName}`)
+    } else {
+      console.log(`Wedding party guest already exists: ${guest.firstName} ${guest.lastName}`)
+    }
   }
 
   console.log('Seeding completed!')
