@@ -21,34 +21,59 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        console.log('[AUTH] Starting authorization...');
+        console.log('[AUTH] Credentials received:', {
+          email: credentials?.email,
+          hasPassword: !!credentials?.password
+        });
+
         if (!credentials?.email || !credentials?.password) {
+          console.log('[AUTH] Missing credentials');
           return null
         }
 
-        const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email as string,
-          },
-        })
+        try {
+          console.log('[AUTH] Looking up user:', credentials.email);
+          const user = await prisma.user.findUnique({
+            where: {
+              email: credentials.email as string,
+            },
+          })
 
-        if (!user) {
-          return null
-        }
+          if (!user) {
+            console.log('[AUTH] User not found');
+            return null
+          }
 
-        const passwordMatch = await bcrypt.compare(
-          credentials.password as string,
-          user.password
-        )
+          console.log('[AUTH] User found:', {
+            id: user.id,
+            email: user.email,
+            hasPassword: !!user.password,
+            passwordLength: user.password?.length
+          });
 
-        if (!passwordMatch) {
-          return null
-        }
+          const passwordMatch = await bcrypt.compare(
+            credentials.password as string,
+            user.password
+          )
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
+          console.log('[AUTH] Password match result:', passwordMatch);
+
+          if (!passwordMatch) {
+            console.log('[AUTH] Password does not match');
+            return null
+          }
+
+          console.log('[AUTH] Authorization successful');
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          }
+        } catch (error) {
+          console.error('[AUTH] Error during authorization:', error);
+          return null;
         }
       },
     }),
