@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Crimson_Text, Playfair_Display } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { Toaster } from "sonner"
 import "./globals.css"
 
 const crimsonText = Crimson_Text({
@@ -76,6 +77,7 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <body className={`${crimsonText.variable} ${playfairDisplay.variable} font-sans antialiased`}>
         {children}
+        <Toaster position="top-right" richColors />
         <Analytics />
       </body>
     </html>
