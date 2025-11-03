@@ -4,8 +4,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // Admin users who can manage the guest list
@@ -60,26 +61,26 @@ model VerificationToken {
 
 // Guest model for wedding invitations
 model Guest {
-  id                String            @id @default(cuid())
-  firstName         String
-  lastName          String
-  email             String?           @unique
-  phone             String?
-  relationToBride   String?
-  relationToGroom   String?
-  invitationStatus  InvitationStatus  @default(NOT_SENT)
-  rsvpStatus        RsvpStatus        @default(PENDING)
-  plusOne           Boolean           @default(false)
-  plusOneName       String?
+  id                  String            @id @default(cuid())
+  firstName           String
+  lastName            String
+  email               String?
+  phone               String?
+  relationToBride     String?
+  relationToGroom     String?
+  invitationStatus    InvitationStatus  @default(NOT_SENT)
+  rsvpStatus          RsvpStatus        @default(PENDING)
+  plusOne             Boolean           @default(false)
+  plusOneName         String?
   dietaryRestrictions String?
-  notes             String?
-  invitationToken   String?           @unique
-  invitationSentAt  DateTime?
-  rsvpSubmittedAt   DateTime?
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
+  notes               String?
+  invitationToken     String            @unique @default(cuid())
+  invitationSentAt    DateTime?
+  rsvpSubmittedAt     DateTime?
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
 
-  @@index([email])
+  @@unique([email])
   @@index([invitationToken])
 }
 
