@@ -39,17 +39,17 @@ A comprehensive, production-ready wedding guest list management system with auth
 
 ## 🔐 Admin Credentials
 
-Authorized admin accounts (change passwords in production):
+Authorized admin accounts:
 
 ```
 Email: christiaanvonstade@gmail.com (Developer & Admin)
 Password: admin123
 
 Email: eloisebissei@gmail.com (Manager)
-Password: admin123
+Password: Tarzan@GooiMielies
 
 Email: christepher.vonstade@gmail.com (Manager)
-Password: admin123
+Password: KolGans@Goosy
 ```
 
 **Note**: Only these three email addresses are authorized to access the admin dashboard.

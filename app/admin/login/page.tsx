@@ -97,7 +97,7 @@ export default function LoginPage() {
               <p>eloisebissei@gmail.com</p>
               <p>christepher.vonstade@gmail.com</p>
             </div>
-            <p className="mt-3 text-xs italic">Default password: admin123</p>
+            <p className="mt-3 text-xs italic">Contact admin for password</p>
           </div>
         </CardContent>
       </Card>

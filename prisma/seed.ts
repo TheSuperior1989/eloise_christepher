@@ -17,12 +17,12 @@ async function main() {
     {
       name: 'Eloise Bissei',
       email: 'eloisebissei@gmail.com',
-      password: 'admin123',
+      password: 'Tarzan@GooiMielies',
     },
     {
       name: 'Christepher von Stade',
       email: 'christepher.vonstade@gmail.com',
-      password: 'admin123',
+      password: 'KolGans@Goosy',
     },
   ]
 
