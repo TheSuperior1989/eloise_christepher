@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Heart, CheckCircle2 } from "lucide-react"
 
-export default function ThankYouPage(): JSX.Element {
+export default function ThankYouPage() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [countdown, setCountdown] = useState(10)

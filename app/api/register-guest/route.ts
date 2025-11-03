@@ -12,7 +12,7 @@ interface GuestData {
   dietaryRestrictions?: string
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { guests } = body as { guests: GuestData[] }

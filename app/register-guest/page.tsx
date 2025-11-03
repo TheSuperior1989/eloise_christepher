@@ -21,7 +21,7 @@ interface GuestFormData {
   dietaryRestrictions: string
 }
 
-export default function RegisterGuestPage(): JSX.Element {
+export default function RegisterGuestPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [guests, setGuests] = useState<GuestFormData[]>([
@@ -36,7 +36,7 @@ export default function RegisterGuestPage(): JSX.Element {
     },
   ])
 
-  const addGuest = (): void => {
+  const addGuest = () => {
     setGuests([
       ...guests,
       {
@@ -51,19 +51,19 @@ export default function RegisterGuestPage(): JSX.Element {
     ])
   }
 
-  const removeGuest = (index: number): void => {
+  const removeGuest = (index: number) => {
     if (guests.length > 1) {
       setGuests(guests.filter((_, i) => i !== index))
     }
   }
 
-  const updateGuest = (index: number, field: keyof GuestFormData, value: string): void => {
+  const updateGuest = (index: number, field: keyof GuestFormData, value: string) => {
     const newGuests = [...guests]
     newGuests[index][field] = value
     setGuests(newGuests)
   }
 
-  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
 
