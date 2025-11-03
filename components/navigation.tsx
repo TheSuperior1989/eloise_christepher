@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { Menu, X } from "lucide-react"
+import { Menu, X, LogIn } from "lucide-react"
+import Link from "next/link"
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
@@ -31,6 +32,13 @@ export function Navigation() {
                 {item.name}
               </a>
             ))}
+            <Link
+              href="/admin/login"
+              className="flex items-center gap-2 text-sm text-[#C4A57B] hover:text-[#B39568] transition-colors font-serif font-medium"
+            >
+              <LogIn size={16} />
+              Sign In
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -52,6 +60,14 @@ export function Navigation() {
                 {item.name}
               </a>
             ))}
+            <Link
+              href="/admin/login"
+              className="flex items-center gap-2 py-2 text-sm text-[#C4A57B] hover:text-[#B39568] transition-colors font-serif font-medium"
+              onClick={() => setIsOpen(false)}
+            >
+              <LogIn size={16} />
+              Sign In
+            </Link>
           </div>
         )}
       </div>
