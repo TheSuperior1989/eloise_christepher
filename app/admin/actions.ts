@@ -8,7 +8,10 @@ import crypto from "crypto"
 import { Resend } from "resend"
 import WeddingInvitationEmail from "@/emails/wedding-invitation"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy-load Resend client to avoid initialization during build
+function getResendClient() {
+  return new Resend(process.env.RESEND_API_KEY)
+}
 
 export async function getGuests() {
   const session = await auth()
@@ -115,6 +118,7 @@ export async function sendInvitation(guestId: string) {
 
   try {
     // Send email using Resend
+    const resend = getResendClient()
     await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || "wedding@example.com",
       to: guest.email,
