@@ -1,0 +1,29 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Subtle watercolor texture overlay - Beige/Cream tones -->
+  
+  <!-- Large soft blobs -->
+  <ellipse cx="400" cy="250" rx="420" ry="370" fill="#F0E8E0" opacity="0.05"/>
+  <ellipse cx="1500" cy="350" rx="480" ry="400" fill="#F5EDE6" opacity="0.06"/>
+  <ellipse cx="900" cy="650" rx="520" ry="440" fill="#E8DDD0" opacity="0.05"/>
+  <ellipse cx="1100" cy="850" rx="400" ry="370" fill="#F0E8E0" opacity="0.05"/>
+  <ellipse cx="300" cy="950" rx="440" ry="380" fill="#F5EDE6" opacity="0.06"/>
+  
+  <!-- Medium organic shapes -->
+  <ellipse cx="700" cy="180" rx="270" ry="240" fill="#F0E8E0" opacity="0.04"/>
+  <ellipse cx="1300" cy="520" rx="300" ry="260" fill="#E8DDD0" opacity="0.04"/>
+  <ellipse cx="250" cy="720" rx="250" ry="220" fill="#F5EDE6" opacity="0.05"/>
+  <ellipse cx="1650" cy="880" rx="280" ry="250" fill="#F0E8E0" opacity="0.04"/>
+  
+  <!-- Small accent blobs -->
+  <ellipse cx="1000" cy="280" rx="170" ry="150" fill="#F5EDE6" opacity="0.04"/>
+  <ellipse cx="1150" cy="480" rx="160" ry="140" fill="#F0E8E0" opacity="0.03"/>
+  <ellipse cx="550" cy="580" rx="180" ry="160" fill="#E8DDD0" opacity="0.04"/>
+  <ellipse cx="1550" cy="730" rx="165" ry="145" fill="#F5EDE6" opacity="0.04"/>
+  
+  <!-- Tiny scattered accents -->
+  <circle cx="800" cy="420" r="90" fill="#F0E8E0" opacity="0.03"/>
+  <circle cx="1350" cy="230" r="80" fill="#F5EDE6" opacity="0.03"/>
+  <circle cx="400" cy="480" r="85" fill="#E8DDD0" opacity="0.03"/>
+  <circle cx="1700" cy="630" r="75" fill="#F0E8E0" opacity="0.03"/>
+  <circle cx="900" cy="980" r="80" fill="#F5EDE6" opacity="0.03"/>
+</svg>

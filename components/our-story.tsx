@@ -2,28 +2,42 @@ import Image from "next/image"
 
 export function OurStory() {
   return (
-    <section id="story" className="py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        {/* Photo */}
-        <div className="mb-12 relative w-full h-[400px] sm:h-[500px] rounded-sm overflow-hidden">
-          <Image
-            src="/assets/eloise_christepher.png"
-            alt="Eloise and Christepher"
-            fill
-            className="object-cover"
-          />
+    <section id="story" className="py-20 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto">
+        {/* Photo Grid with soft borders */}
+        <div className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* First Photo */}
+          <div className="relative w-full h-[400px] sm:h-[500px] rounded-lg overflow-hidden shadow-lg border-8 border-white/50">
+            <Image
+              src="/assets/eloise_christepher.jpg"
+              alt="Eloise and Christepher"
+              fill
+              className="object-cover"
+            />
+          </div>
+
+          {/* Second Photo */}
+          <div className="relative w-full h-[400px] sm:h-[500px] rounded-lg overflow-hidden shadow-lg border-8 border-white/50">
+            <Image
+              src="/assets/beautiful_funny.jpg"
+              alt="Eloise and Christepher - Beautiful Moment"
+              fill
+              className="object-cover"
+            />
+          </div>
         </div>
 
         {/* Story Content */}
-        <div className="space-y-8">
+        <div className="space-y-8 max-w-4xl mx-auto">
           <h2
-            className="font-serif text-4xl sm:text-5xl text-[#3D3630] text-center mb-12"
+            className="font-serif text-4xl sm:text-5xl text-foreground text-center mb-4"
             style={{ fontFamily: "Playfair Display, serif" }}
           >
             Our Story
           </h2>
+          <div className="w-24 h-px bg-accent mx-auto mb-12" />
 
-          <div className="prose prose-lg max-w-none font-serif text-[#5C5347] leading-relaxed text-center space-y-6">
+          <div className="prose prose-lg max-w-none font-serif text-muted-foreground leading-relaxed text-center space-y-6">
             <p className="text-balance">
               It all started in Grade 10, in a computer class where two very different people's paths crossed. Eloise, the shy, introverted new girl, sat quietly in the front, trying to figure out where she fit in. And then there was Christepher: the class clown, towering over everyone, always cracking jokes, and somehow friends with everyone.
             </p>

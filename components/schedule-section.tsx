@@ -122,35 +122,35 @@ export function ScheduleSection() {
   ]
 
   return (
-    <section id="schedule" className="py-20 px-4 bg-white">
+    <section id="schedule" className="py-20 px-4">
       <div className="max-w-4xl mx-auto">
-        <h2 className="font-serif text-4xl md:text-5xl text-[#3D3630] text-center mb-4">Weekend Schedule</h2>
-        <div className="w-24 h-px bg-[#C4A57B] mx-auto mb-16" />
+        <h2 className="font-serif text-4xl md:text-5xl text-foreground text-center mb-4" style={{ fontFamily: "Playfair Display, serif" }}>Weekend Schedule</h2>
+        <div className="w-24 h-px bg-accent mx-auto mb-16" />
 
         <div className="space-y-16">
           {schedule.map((day, dayIndex) => (
             <div key={dayIndex}>
               <div className="text-center mb-8">
-                <h3 className="font-serif text-3xl text-[#3D3630] mb-2">{day.day}</h3>
-                <p className="text-[#5C5347] font-serif">{day.date}</p>
+                <h3 className="font-serif text-3xl text-foreground mb-2" style={{ fontFamily: "Playfair Display, serif" }}>{day.day}</h3>
+                <p className="text-muted-foreground font-serif">{day.date}</p>
               </div>
 
               <div className="space-y-8">
                 {day.events.map((event, eventIndex) => (
-                  <div key={eventIndex} className="border-l-2 border-[#C4A57B] pl-6 py-2 relative">
-                    <div className="absolute -left-2 top-4 w-3 h-3 bg-[#C4A57B] rounded-full" />
+                  <div key={eventIndex} className="border-l-2 border-accent pl-6 py-2 relative">
+                    <div className="absolute -left-2 top-4 w-3 h-3 bg-accent rounded-full" />
                     <div className="flex flex-col md:flex-row md:items-start gap-4">
                       <div className="md:w-48 flex-shrink-0">
-                        <div className="flex items-center gap-2 text-[#5C5347] mb-1">
+                        <div className="flex items-center gap-2 text-muted-foreground mb-1">
                           <Calendar size={16} />
                           <span className="font-serif text-sm">{event.time}</span>
                         </div>
-                        <span className="inline-block px-3 py-1 bg-[#F5F1EB] text-[#5C5347] text-xs font-serif rounded-full">
+                        <span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground text-xs font-serif rounded-full">
                           {event.attire}
                         </span>
                       </div>
                       <div className="flex-1">
-                        <h4 className="font-serif text-xl text-[#3D3630] mb-2">{event.title}</h4>
+                        <h4 className="font-serif text-xl text-foreground mb-2" style={{ fontFamily: "Playfair Display, serif" }}>{event.title}</h4>
                         <p className="text-[#5C5347] leading-relaxed mb-2">{event.description}</p>
                         <div className="flex items-start gap-2 text-sm text-[#7A6F5D]">
                           <MapPin size={16} className="flex-shrink-0 mt-0.5" />

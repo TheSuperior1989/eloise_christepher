@@ -1,0 +1,60 @@
+<svg width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Watercolor-style floral corner decoration - Top Left -->
+  
+  <!-- Background watercolor blobs -->
+  <ellipse cx="80" cy="80" rx="90" ry="85" fill="#E8B4A0" opacity="0.15"/>
+  <ellipse cx="120" cy="100" rx="70" ry="75" fill="#D4A89A" opacity="0.12"/>
+  
+  <!-- Eucalyptus leaves -->
+  <ellipse cx="45" cy="120" rx="8" ry="20" fill="#8B9D83" opacity="0.6" transform="rotate(-25 45 120)"/>
+  <ellipse cx="55" cy="135" rx="7" ry="18" fill="#8B9D83" opacity="0.5" transform="rotate(-30 55 135)"/>
+  <ellipse cx="65" cy="148" rx="6" ry="16" fill="#8B9D83" opacity="0.55" transform="rotate(-35 65 148)"/>
+  <ellipse cx="38" cy="105" rx="7" ry="19" fill="#8B9D83" opacity="0.5" transform="rotate(-20 38 105)"/>
+  
+  <!-- Pampas grass stems -->
+  <path d="M 180 40 Q 175 60 170 80 Q 168 95 165 110" stroke="#C4B5A0" stroke-width="2" fill="none" opacity="0.4"/>
+  <path d="M 190 35 Q 188 55 185 75 Q 183 90 180 105" stroke="#C4B5A0" stroke-width="2" fill="none" opacity="0.35"/>
+  
+  <!-- Pampas grass plumes -->
+  <ellipse cx="180" cy="35" rx="12" ry="25" fill="#E8DDD0" opacity="0.7" transform="rotate(-15 180 35)"/>
+  <ellipse cx="190" cy="30" rx="10" ry="22" fill="#E8DDD0" opacity="0.65" transform="rotate(-10 190 30)"/>
+  <ellipse cx="175" cy="40" rx="11" ry="23" fill="#E8DDD0" opacity="0.6" transform="rotate(-20 175 40)"/>
+  
+  <!-- Rose 1 - Main focal flower -->
+  <circle cx="100" cy="90" r="25" fill="#E8B4A0" opacity="0.3"/>
+  <circle cx="100" cy="90" r="20" fill="#E8B4A0" opacity="0.4"/>
+  <circle cx="100" cy="90" r="15" fill="#D4A89A" opacity="0.5"/>
+  <circle cx="100" cy="90" r="10" fill="#D4A89A" opacity="0.6"/>
+  <circle cx="100" cy="90" r="6" fill="#C99A8C" opacity="0.7"/>
+  
+  <!-- Rose petals detail -->
+  <path d="M 100 90 Q 85 85 80 95 Q 85 105 100 100 Z" fill="#E8B4A0" opacity="0.4"/>
+  <path d="M 100 90 Q 115 85 120 95 Q 115 105 100 100 Z" fill="#E8B4A0" opacity="0.35"/>
+  <path d="M 100 90 Q 95 75 105 70 Q 115 75 110 90 Z" fill="#D4A89A" opacity="0.4"/>
+  
+  <!-- Rose 2 - Smaller accent -->
+  <circle cx="150" cy="120" r="18" fill="#D4A89A" opacity="0.3"/>
+  <circle cx="150" cy="120" r="14" fill="#D4A89A" opacity="0.4"/>
+  <circle cx="150" cy="120" r="10" fill="#C99A8C" opacity="0.5"/>
+  <circle cx="150" cy="120" r="6" fill="#C99A8C" opacity="0.6"/>
+  
+  <!-- Small buds -->
+  <circle cx="70" cy="60" r="8" fill="#E8B4A0" opacity="0.5"/>
+  <circle cx="70" cy="60" r="5" fill="#D4A89A" opacity="0.6"/>
+  <circle cx="130" cy="70" r="7" fill="#D4A89A" opacity="0.5"/>
+  <circle cx="130" cy="70" r="4" fill="#C99A8C" opacity="0.6"/>
+  
+  <!-- Delicate stems -->
+  <path d="M 100 115 Q 95 130 90 145" stroke="#8B9D83" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <path d="M 150 138 Q 148 150 145 165" stroke="#8B9D83" stroke-width="1.5" fill="none" opacity="0.4"/>
+  
+  <!-- Small leaves -->
+  <ellipse cx="92" cy="130" rx="5" ry="10" fill="#8B9D83" opacity="0.5" transform="rotate(-40 92 130)"/>
+  <ellipse cx="147" cy="150" rx="4" ry="9" fill="#8B9D83" opacity="0.5" transform="rotate(-35 147 150)"/>
+  
+  <!-- Tiny accent flowers -->
+  <circle cx="60" cy="140" r="4" fill="#E8B4A0" opacity="0.6"/>
+  <circle cx="60" cy="140" r="2" fill="#D4A89A" opacity="0.7"/>
+  <circle cx="165" cy="95" r="4" fill="#D4A89A" opacity="0.6"/>
+  <circle cx="165" cy="95" r="2" fill="#C99A8C" opacity="0.7"/>
+</svg>

@@ -1,33 +1,13 @@
 "use client"
 
-import { useEffect, useState, Suspense } from "react"
-import { useSearchParams, useRouter } from "next/navigation"
+import { Suspense } from "react"
+import { useSearchParams } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { Heart, CheckCircle2 } from "lucide-react"
 
 function ThankYouContent() {
   const searchParams = useSearchParams()
-  const router = useRouter()
-  const [countdown, setCountdown] = useState(10)
   const guestCount = searchParams.get("count") || "1"
-
-  useEffect(() => {
-    // Countdown timer
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer)
-          // Redirect to main website
-          window.location.href = "/"
-          return 0
-        }
-        return prev - 1
-      })
-    }, 1000)
-
-    return () => clearInterval(timer)
-  }, [router])
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F5F1E8] to-white flex items-center justify-center py-12 px-4">
@@ -81,19 +61,7 @@ function ThankYouContent() {
               </ul>
             </div>
 
-            <div className="pt-4 space-y-3">
-              <p className="text-sm text-[#6B6560]">
-                Redirecting to our website in{" "}
-                <span className="font-semibold text-[#C4A57B]">{countdown}</span>{" "}
-                seconds...
-              </p>
-              <Button
-                onClick={() => (window.location.href = "/")}
-                className="bg-[#C4A57B] hover:bg-[#B39568] text-white"
-              >
-                Go to Website Now
-              </Button>
-            </div>
+
 
             <div className="pt-6 border-t border-[#C4A57B]/20">
               <p className="text-xs text-[#6B6560]">

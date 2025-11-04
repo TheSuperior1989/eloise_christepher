@@ -1,17 +1,18 @@
 export function LocationSection() {
   return (
-    <section id="travel" className="py-16 px-4 sm:px-6 lg:px-8">
+    <section id="travel" className="py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <h2
-          className="font-serif text-4xl sm:text-5xl text-[#3D3630] text-center mb-12"
+          className="font-serif text-4xl sm:text-5xl text-foreground text-center mb-4"
           style={{ fontFamily: "Playfair Display, serif" }}
         >
           Location & Travel
         </h2>
+        <div className="w-24 h-px bg-accent mx-auto mb-12" />
 
         <div className="space-y-8">
-          <div className="text-center font-serif text-[#5C5347] space-y-4">
-            <h3 className="text-2xl" style={{ fontFamily: "Playfair Display, serif" }}>
+          <div className="text-center font-serif text-muted-foreground space-y-4">
+            <h3 className="text-2xl text-foreground" style={{ fontFamily: "Playfair Display, serif" }}>
               Ceremony & Reception
             </h3>
             <p className="text-lg">Kwalata Game Lodge</p>
@@ -20,7 +21,7 @@ export function LocationSection() {
           </div>
 
           {/* Map */}
-          <div className="w-full h-[400px] bg-[#E8E3DB] rounded-sm overflow-hidden">
+          <div className="w-full h-[400px] bg-secondary rounded-lg overflow-hidden shadow-lg border-4 border-white/30">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3594.8!2d28.3!3d-25.4!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e956b0b0b0b0b0b%3A0x0!2sKwalata%20Game%20Lodge!5e0!3m2!1sen!2sza!4v1234567890"
               width="100%"
@@ -34,8 +35,8 @@ export function LocationSection() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 pt-8">
-            <div className="text-center font-serif text-[#5C5347] space-y-3">
-              <h3 className="text-xl" style={{ fontFamily: "Playfair Display, serif" }}>
+            <div className="text-center font-serif text-muted-foreground space-y-3">
+              <h3 className="text-xl text-foreground" style={{ fontFamily: "Playfair Display, serif" }}>
                 Accommodations
               </h3>
               <p className="text-sm leading-relaxed">
@@ -44,8 +45,8 @@ export function LocationSection() {
               </p>
             </div>
 
-            <div className="text-center font-serif text-[#5C5347] space-y-3">
-              <h3 className="text-xl" style={{ fontFamily: "Playfair Display, serif" }}>
+            <div className="text-center font-serif text-muted-foreground space-y-3">
+              <h3 className="text-xl text-foreground" style={{ fontFamily: "Playfair Display, serif" }}>
                 Getting There
               </h3>
               <p className="text-sm leading-relaxed">

@@ -69,30 +69,30 @@ export function QASection() {
   ]
 
   return (
-    <section id="qa" className="py-20 px-4 bg-[#FAF8F5]">
+    <section id="qa" className="py-20 px-4">
       <div className="max-w-3xl mx-auto">
-        <h2 className="font-serif text-4xl md:text-5xl text-[#3D3630] text-center mb-4">Q & A</h2>
-        <div className="w-24 h-px bg-[#C4A57B] mx-auto mb-4" />
-        <p className="text-center text-[#5C5347] font-serif mb-12">
+        <h2 className="font-serif text-4xl md:text-5xl text-foreground text-center mb-4" style={{ fontFamily: "Playfair Display, serif" }}>Q & A</h2>
+        <div className="w-24 h-px bg-accent mx-auto mb-4" />
+        <p className="text-center text-muted-foreground font-serif mb-12">
           For all our friends and family who have lots of questions, please check out our Q & A first!
         </p>
 
         <div className="space-y-4">
           {qaItems.map((item, index) => (
-            <div key={index} className="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div key={index} className="bg-card rounded-lg shadow-sm overflow-hidden border border-border">
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-[#FAF8F5] transition-colors"
+                className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-secondary/50 transition-colors"
               >
-                <span className="font-serif text-lg text-[#3D3630] pr-4">{item.question}</span>
+                <span className="font-serif text-lg text-foreground pr-4">{item.question}</span>
                 <ChevronDown
                   size={20}
-                  className={`text-[#C4A57B] flex-shrink-0 transition-transform ${
+                  className={`text-accent flex-shrink-0 transition-transform ${
                     openIndex === index ? "rotate-180" : ""
                   }`}
                 />
               </button>
-              {openIndex === index && <div className="px-6 pb-4 text-[#5C5347] leading-relaxed">{item.answer}</div>}
+              {openIndex === index && <div className="px-6 pb-4 text-muted-foreground leading-relaxed">{item.answer}</div>}
             </div>
           ))}
         </div>

@@ -6,39 +6,48 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(0.96 0.015 75);
-  --foreground: oklch(0.30 0.02 45);
-  --card: oklch(0.97 0.012 75);
-  --card-foreground: oklch(0.30 0.02 45);
-  --popover: oklch(0.97 0.012 75);
-  --popover-foreground: oklch(0.30 0.02 45);
-  --primary: oklch(0.55 0.08 35);
-  --primary-foreground: oklch(0.97 0.012 75);
-  --secondary: oklch(0.88 0.025 60);
-  --secondary-foreground: oklch(0.30 0.02 45);
-  --muted: oklch(0.90 0.02 70);
-  --muted-foreground: oklch(0.45 0.03 50);
-  --accent: oklch(0.85 0.04 55);
-  --accent-foreground: oklch(0.30 0.02 45);
+  /* Soft peachy/coral palette inspired by romantic wedding aesthetic */
+  --background: oklch(0.97 0.015 45); /* Warm cream #F5EDE6 */
+  --foreground: oklch(0.35 0.025 35); /* Warm dark brown */
+  --card: oklch(0.98 0.012 50); /* Soft white with warmth */
+  --card-foreground: oklch(0.35 0.025 35);
+  --popover: oklch(0.98 0.012 50);
+  --popover-foreground: oklch(0.35 0.025 35);
+  --primary: oklch(0.72 0.08 35); /* Soft terracotta/coral #D4A89A */
+  --primary-foreground: oklch(0.98 0.01 45);
+  --secondary: oklch(0.90 0.03 45); /* Peachy beige #F0E8E0 */
+  --secondary-foreground: oklch(0.35 0.025 35);
+  --muted: oklch(0.92 0.02 50); /* Soft muted beige */
+  --muted-foreground: oklch(0.50 0.02 40);
+  --accent: oklch(0.78 0.09 30); /* Warm peachy accent #E8B4A0 */
+  --accent-foreground: oklch(0.35 0.025 35);
   --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.97 0.012 75);
-  --border: oklch(0.88 0.02 65);
-  --input: oklch(0.88 0.02 65);
-  --ring: oklch(0.55 0.08 35);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.25rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --destructive-foreground: oklch(0.98 0.01 45);
+  --border: oklch(0.88 0.025 45); /* Soft peachy border */
+  --input: oklch(0.88 0.025 45);
+  --ring: oklch(0.72 0.08 35);
+  --chart-1: oklch(0.78 0.09 30); /* Peachy */
+  --chart-2: oklch(0.65 0.08 120); /* Sage green */
+  --chart-3: oklch(0.72 0.08 35); /* Terracotta */
+  --chart-4: oklch(0.85 0.06 50); /* Light peach */
+  --chart-5: oklch(0.60 0.07 130); /* Olive green */
+  --radius: 0.5rem;
+  --sidebar: oklch(0.98 0.01 45);
+  --sidebar-foreground: oklch(0.35 0.025 35);
+  --sidebar-primary: oklch(0.72 0.08 35);
+  --sidebar-primary-foreground: oklch(0.98 0.01 45);
+  --sidebar-accent: oklch(0.90 0.03 45);
+  --sidebar-accent-foreground: oklch(0.35 0.025 35);
+  --sidebar-border: oklch(0.88 0.025 45);
+  --sidebar-ring: oklch(0.72 0.08 35);
+
+  /* Custom wedding theme colors */
+  --wedding-peach: oklch(0.78 0.09 30); /* #E8B4A0 */
+  --wedding-coral: oklch(0.72 0.08 35); /* #D4A89A */
+  --wedding-cream: oklch(0.97 0.015 45); /* #F5EDE6 */
+  --wedding-beige: oklch(0.90 0.03 45); /* #F0E8E0 */
+  --wedding-sage: oklch(0.65 0.08 120); /* Sage green */
+  --wedding-olive: oklch(0.60 0.07 130); /* Olive green */
 }
 
 .dark {
@@ -124,5 +133,64 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Watercolor texture overlay */
+  .watercolor-texture {
+    position: relative;
+  }
+
+  .watercolor-texture::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 30%, oklch(0.78 0.09 30 / 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, oklch(0.90 0.03 45 / 0.12) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, oklch(0.72 0.08 35 / 0.06) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Soft gradient backgrounds */
+  .bg-wedding-gradient {
+    background: linear-gradient(
+      135deg,
+      oklch(0.97 0.015 45) 0%,
+      oklch(0.95 0.02 48) 50%,
+      oklch(0.97 0.015 45) 100%
+    );
+  }
+
+  .bg-wedding-peach-gradient {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.98 0.01 45) 0%,
+      oklch(0.90 0.03 45) 100%
+    );
+  }
+
+  /* Floral section divider */
+  .floral-divider {
+    position: relative;
+    padding: 3rem 0;
+  }
+
+  .floral-divider::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      oklch(0.78 0.09 30 / 0.5),
+      transparent
+    );
   }
 }
