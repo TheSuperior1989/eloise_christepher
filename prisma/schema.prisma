@@ -63,7 +63,7 @@ model Guest {
   id                  String            @id @default(cuid())
   firstName           String
   lastName            String
-  email               String?
+  email               String?           @unique
   phone               String?
   relationToBride     String?
   relationToGroom     String?
@@ -79,7 +79,6 @@ model Guest {
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
 
-  @@unique([email])
   @@index([invitationToken])
 }
 

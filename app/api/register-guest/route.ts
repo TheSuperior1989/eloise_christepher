@@ -44,11 +44,11 @@ export async function POST(request: NextRequest) {
           data: {
             firstName: guest.firstName,
             lastName: guest.lastName,
-            email: guest.email || undefined,
-            phone: guest.phone || undefined,
-            relationToBride: guest.relationToBride || undefined,
-            relationToGroom: guest.relationToGroom || undefined,
-            dietaryRestrictions: guest.dietaryRestrictions || undefined,
+            email: guest.email && guest.email.trim() !== "" ? guest.email : undefined,
+            phone: guest.phone && guest.phone.trim() !== "" ? guest.phone : undefined,
+            relationToBride: guest.relationToBride && guest.relationToBride.trim() !== "" ? guest.relationToBride : undefined,
+            relationToGroom: guest.relationToGroom && guest.relationToGroom.trim() !== "" ? guest.relationToGroom : undefined,
+            dietaryRestrictions: guest.dietaryRestrictions && guest.dietaryRestrictions.trim() !== "" ? guest.dietaryRestrictions : undefined,
             invitationToken: crypto.randomBytes(32).toString("hex"),
             // Set plusOne to true if this is not the first guest
             plusOne: false,
