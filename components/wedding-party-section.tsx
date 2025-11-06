@@ -18,7 +18,14 @@ export function WeddingPartySection() {
     <section id="party" className="py-20 px-4 bg-[#FAF8F5]">
       <div className="max-w-6xl mx-auto">
         <h2 className="font-serif text-4xl md:text-5xl text-[#3D3630] text-center mb-4">Wedding Party</h2>
-        <div className="w-24 h-px bg-[#C4A57B] mx-auto mb-16" />
+        <div className="w-24 h-px bg-[#C4A57B] mx-auto mb-8" />
+
+        {/* Placeholder for description text */}
+        <div className="max-w-3xl mx-auto text-center mb-16">
+          <p className="text-lg text-[#7A6F5D] font-serif leading-relaxed italic">
+            [Description text to be added - space reserved for bridal party introduction]
+          </p>
+        </div>
 
         <div className="grid md:grid-cols-2 gap-12 md:gap-16">
           {/* Bridal Party */}

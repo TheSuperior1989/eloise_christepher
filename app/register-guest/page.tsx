@@ -4,12 +4,11 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Heart, Plus, Trash2 } from "lucide-react"
+import Image from "next/image"
 
 interface GuestFormData {
   firstName: string
@@ -18,7 +17,6 @@ interface GuestFormData {
   phone: string
   relationToBride: string
   relationToGroom: string
-  dietaryRestrictions: string
 }
 
 export default function RegisterGuestPage() {
@@ -32,7 +30,6 @@ export default function RegisterGuestPage() {
       phone: "",
       relationToBride: "",
       relationToGroom: "",
-      dietaryRestrictions: "",
     },
   ])
 
@@ -46,7 +43,6 @@ export default function RegisterGuestPage() {
         phone: "",
         relationToBride: "",
         relationToGroom: "",
-        dietaryRestrictions: "",
       },
     ])
   }
@@ -98,8 +94,19 @@ export default function RegisterGuestPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F5F1E8] to-white py-12 px-4">
-      <div className="max-w-3xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-b from-[#F5F1E8] to-white py-12 px-4 relative overflow-hidden">
+      {/* Background Image - BOHO themed */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/assets/guest-registration-boho.jpg"
+          alt=""
+          fill
+          className="object-cover opacity-30"
+          priority={false}
+        />
+      </div>
+
+      <div className="max-w-3xl mx-auto relative z-10">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
             <Heart className="w-16 h-16 text-[#C4A57B]" fill="#C4A57B" />
@@ -222,17 +229,6 @@ export default function RegisterGuestPage() {
                         placeholder="e.g., Colleague, Brother"
                       />
                     </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor={`dietaryRestrictions-${index}`}>Dietary Restrictions</Label>
-                    <Input
-                      id={`dietaryRestrictions-${index}`}
-                      value={guest.dietaryRestrictions}
-                      onChange={(e) => updateGuest(index, "dietaryRestrictions", e.target.value)}
-                      disabled={loading}
-                      placeholder="e.g., Vegetarian, Gluten-free, None"
-                    />
                   </div>
                 </div>
               ))}

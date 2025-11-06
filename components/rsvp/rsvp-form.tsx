@@ -5,7 +5,6 @@ import { Guest, RsvpStatus } from "@prisma/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { submitRsvp } from "@/app/rsvp/actions"
 import { toast } from "sonner"
@@ -22,9 +21,6 @@ export function RsvpForm({ guest }: RsvpFormProps) {
     guest.rsvpStatus || "PENDING"
   )
   const [plusOneName, setPlusOneName] = useState(guest.plusOneName || "")
-  const [dietaryRestrictions, setDietaryRestrictions] = useState(
-    guest.dietaryRestrictions || ""
-  )
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -41,7 +37,6 @@ export function RsvpForm({ guest }: RsvpFormProps) {
         guestId: guest.id,
         rsvpStatus,
         plusOneName: guest.plusOne ? plusOneName : undefined,
-        dietaryRestrictions,
       })
 
       setSubmitted(true)
@@ -87,11 +82,6 @@ export function RsvpForm({ guest }: RsvpFormProps) {
           {guest.plusOne && plusOneName && (
             <p className="text-sm text-[#7A6F5D] mt-4">
               <strong>Plus One:</strong> {plusOneName}
-            </p>
-          )}
-          {dietaryRestrictions && (
-            <p className="text-sm text-[#7A6F5D] mt-2">
-              <strong>Dietary Restrictions:</strong> {dietaryRestrictions}
             </p>
           )}
         </div>
@@ -151,23 +141,6 @@ export function RsvpForm({ guest }: RsvpFormProps) {
             value={plusOneName}
             onChange={(e) => setPlusOneName(e.target.value)}
             placeholder="Enter your guest's name"
-            disabled={loading}
-          />
-        </div>
-      )}
-
-      {/* Dietary Restrictions */}
-      {rsvpStatus === "ATTENDING" && (
-        <div className="space-y-2">
-          <Label htmlFor="dietaryRestrictions" className="text-base font-medium text-[#3D3630]">
-            Dietary Restrictions (Optional)
-          </Label>
-          <Textarea
-            id="dietaryRestrictions"
-            value={dietaryRestrictions}
-            onChange={(e) => setDietaryRestrictions(e.target.value)}
-            placeholder="Please let us know of any dietary restrictions or allergies..."
-            rows={3}
             disabled={loading}
           />
         </div>
