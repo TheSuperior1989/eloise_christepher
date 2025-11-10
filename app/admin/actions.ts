@@ -117,10 +117,25 @@ export async function sendInvitation(guestId: string) {
   const rsvpUrl = `${baseUrl}/rsvp/${guest.invitationToken}`
 
   try {
+    // Validate environment variables
+    if (!process.env.RESEND_API_KEY) {
+      console.error("RESEND_API_KEY is not set in environment variables")
+      throw new Error("Email service not configured. Please contact administrator.")
+    }
+
+    if (!process.env.RESEND_FROM_EMAIL) {
+      console.error("RESEND_FROM_EMAIL is not set in environment variables")
+      throw new Error("Email sender not configured. Please contact administrator.")
+    }
+
+    console.log(`Sending invitation to ${guest.email} (${guest.firstName} ${guest.lastName})`)
+    console.log(`RSVP URL: ${rsvpUrl}`)
+    console.log(`From email: ${process.env.RESEND_FROM_EMAIL}`)
+
     // Send email using Resend
     const resend = getResendClient()
-    await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || "wedding@example.com",
+    const emailResult = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL,
       to: guest.email,
       subject: "You're Invited to Eloise & Christepher's Wedding",
       react: WeddingInvitationEmail({
@@ -128,6 +143,8 @@ export async function sendInvitation(guestId: string) {
         rsvpUrl,
       }),
     })
+
+    console.log("Email sent successfully:", emailResult)
 
     // Update invitation status
     await prisma.guest.update({
@@ -139,9 +156,15 @@ export async function sendInvitation(guestId: string) {
     })
 
     revalidatePath("/admin/dashboard")
-    return { success: true }
+    return { success: true, emailId: emailResult.data?.id }
   } catch (error) {
     console.error("Failed to send invitation:", error)
+    console.error("Error details:", {
+      guestId,
+      guestEmail: guest.email,
+      errorMessage: error instanceof Error ? error.message : "Unknown error",
+      errorStack: error instanceof Error ? error.stack : undefined,
+    })
 
     // Update status to FAILED
     await prisma.guest.update({
@@ -151,7 +174,9 @@ export async function sendInvitation(guestId: string) {
       },
     })
 
-    throw new Error("Failed to send invitation email")
+    // Provide more specific error message
+    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred"
+    throw new Error(`Failed to send invitation email: ${errorMessage}`)
   }
 }
 
