@@ -74,7 +74,7 @@ export function WeddingBackground({
         {corners.topLeft && (
           <div className="absolute top-0 left-0 w-[600px] h-[600px] pointer-events-none z-10 opacity-50">
             <Image
-              src="/assets/floral-corner-top-left.jpg"
+              src="/assets/floral-corner-top-left.png"
               alt=""
               fill
               className="object-cover object-left-top"
@@ -87,7 +87,7 @@ export function WeddingBackground({
         {corners.topRight && (
           <div className="absolute top-0 right-0 w-[600px] h-[600px] pointer-events-none z-10 opacity-50">
             <Image
-              src="/assets/floral-corner-top-right.jpg"
+              src="/assets/floral-corner-top-right.png"
               alt=""
               fill
               className="object-cover object-right-top"
@@ -100,7 +100,7 @@ export function WeddingBackground({
         {corners.bottomLeft && (
           <div className="absolute bottom-0 left-0 w-[600px] h-[600px] pointer-events-none z-10 opacity-50">
             <Image
-              src="/assets/floral-corner-bottom-left.jpg"
+              src="/assets/floral-corner-bottom-left.png"
               alt=""
               fill
               className="object-cover object-left-bottom"
@@ -113,7 +113,7 @@ export function WeddingBackground({
         {corners.bottomRight && (
           <div className="absolute bottom-0 right-0 w-[600px] h-[600px] pointer-events-none z-10 opacity-50">
             <Image
-              src="/assets/floral-corner-bottom-right.jpg"
+              src="/assets/floral-corner-bottom-right.png"
               alt=""
               fill
               className="object-cover object-right-bottom"
