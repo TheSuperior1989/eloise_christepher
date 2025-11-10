@@ -67,10 +67,10 @@ function ThankYouContent() {
               <p className="text-xs text-[#6B6560]">
                 If you have any questions, please contact us at{" "}
                 <a
-                  href="mailto:christiaanvonstade@gmail.com"
+                  href="mailto:eloisebissei@gmail.com"
                   className="text-[#C4A57B] hover:underline"
                 >
-                  christiaanvonstade@gmail.com
+                  eloisebissei@gmail.com
                 </a>
               </p>
             </div>
