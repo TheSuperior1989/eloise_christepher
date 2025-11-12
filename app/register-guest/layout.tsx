@@ -13,10 +13,10 @@ export const metadata: Metadata = {
     siteName: "Eloise & Christepher's Wedding",
     images: [
       {
-        url: "https://eloise-christepher.vercel.app/assets/kwalata.jpg",
+        url: "https://eloise-christepher.vercel.app/assets/guest-registration-boho.jpg",
         width: 1200,
         height: 630,
-        alt: "Eloise & Christepher Wedding at Kwalata Game Lodge",
+        alt: "Eloise & Christepher - Wedding Registration",
         type: "image/jpeg",
       },
     ],
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Eloise & Christepher - April 4, 2026",
     description: "Join us at Kwalata Game Lodge, South Africa for our wedding celebration",
-    images: ["https://eloise-christepher.vercel.app/assets/kwalata.jpg"],
+    images: ["https://eloise-christepher.vercel.app/assets/guest-registration-boho.jpg"],
   },
 }
 
