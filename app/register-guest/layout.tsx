@@ -11,11 +11,21 @@ export const metadata: Metadata = {
     title: "Eloise & Christepher - April 4, 2026",
     description: "Join us at Kwalata Game Lodge, Dinokeng Game Reserve, South Africa for our wedding celebration on April 4, 2026",
     siteName: "Eloise & Christepher's Wedding",
+    images: [
+      {
+        url: "https://eloise-christepher.vercel.app/assets/kwalata.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Eloise & Christepher Wedding at Kwalata Game Lodge",
+        type: "image/jpeg",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Eloise & Christepher - April 4, 2026",
     description: "Join us at Kwalata Game Lodge, South Africa for our wedding celebration",
+    images: ["https://eloise-christepher.vercel.app/assets/kwalata.jpg"],
   },
 }
 
