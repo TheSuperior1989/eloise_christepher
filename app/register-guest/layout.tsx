@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Guest Registration",
   description: "Join us at Kwalata Game Lodge, Dinokeng Game Reserve, South Africa for our wedding celebration on April 4, 2026",
+  metadataBase: new URL('https://eloise-christepher.vercel.app'),
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -12,10 +13,11 @@ export const metadata: Metadata = {
     siteName: "Eloise & Christepher's Wedding",
     images: [
       {
-        url: "https://eloise-christepher.vercel.app/assets/eloise_christepher.jpg",
+        url: "/assets/eloise_christepher.jpg",
         width: 1200,
         height: 630,
         alt: "Eloise & Christepher - Wedding Registration",
+        type: "image/jpeg",
       },
     ],
   },
@@ -23,10 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Eloise & Christepher - April 4, 2026",
     description: "Join us at Kwalata Game Lodge, South Africa for our wedding celebration",
-    images: ["https://eloise-christepher.vercel.app/assets/eloise_christepher.jpg"],
-  },
-  other: {
-    "fb:app_id": "1234567890", // Optional: You can create a Facebook App ID if needed
+    images: ["/assets/eloise_christepher.jpg"],
   },
 }
 
