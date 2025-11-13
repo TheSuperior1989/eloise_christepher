@@ -69,8 +69,23 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error("Error registering guests:", error)
+
+    // Check if it's a Prisma unique constraint error
+    if (error && typeof error === 'object' && 'code' in error) {
+      if (error.code === 'P2002') {
+        // Unique constraint violation
+        const target = (error as any).meta?.target
+        if (target && target.includes('email')) {
+          return NextResponse.json(
+            { error: "This email address is already registered. Please use a different email or contact us if you need assistance." },
+            { status: 409 }
+          )
+        }
+      }
+    }
+
     return NextResponse.json(
-      { error: "Failed to register guests" },
+      { error: "Failed to register guests. Please try again or contact us for assistance." },
       { status: 500 }
     )
   }

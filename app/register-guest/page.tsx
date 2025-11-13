@@ -79,12 +79,15 @@ export default function RegisterGuestPage() {
         body: JSON.stringify({ guests }),
       })
 
+      const data = await response.json()
+
       if (!response.ok) {
-        throw new Error("Failed to register guests")
+        // Display the specific error message from the API
+        toast.error(data.error || "Failed to register. Please try again.")
+        setLoading(false)
+        return
       }
 
-      const data = await response.json()
-      
       // Redirect to thank you page
       router.push(`/register-guest/thank-you?count=${data.count}`)
     } catch (error) {
