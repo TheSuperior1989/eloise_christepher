@@ -4,11 +4,13 @@ import { useState } from "react"
 import { Guest } from "@prisma/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Plus, LogOut, Search, Mail } from "lucide-react"
+import { Plus, LogOut, Search, Mail, RefreshCw } from "lucide-react"
 import { signOut } from "next-auth/react"
 import { GuestTable } from "./guest-table"
 import { AddGuestDialog } from "./add-guest-dialog"
 import { Session } from "next-auth"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 interface GuestListManagerProps {
   initialGuests: Guest[]
@@ -16,9 +18,18 @@ interface GuestListManagerProps {
 }
 
 export function GuestListManager({ initialGuests, session }: GuestListManagerProps) {
+  const router = useRouter()
   const [guests, setGuests] = useState(initialGuests)
   const [searchQuery, setSearchQuery] = useState("")
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
+  const handleRefresh = () => {
+    setIsRefreshing(true)
+    router.refresh()
+    toast.success("Guest list refreshed")
+    setTimeout(() => setIsRefreshing(false), 1000)
+  }
 
   const filteredGuests = guests.filter((guest) => {
     const query = searchQuery.toLowerCase()
@@ -95,6 +106,15 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
             className="pl-10"
           />
         </div>
+        <Button
+          onClick={handleRefresh}
+          variant="outline"
+          className="gap-2"
+          disabled={isRefreshing}
+        >
+          <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+          Refresh
+        </Button>
         <Button
           onClick={() => setIsAddDialogOpen(true)}
           className="bg-[#C4A57B] hover:bg-[#B39568] text-white gap-2"
