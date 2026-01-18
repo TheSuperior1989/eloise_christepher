@@ -1,16 +1,23 @@
 "use client"
 
 import { useState } from "react"
-import { Guest } from "@prisma/client"
+import { Guest, InvitationStatus, RsvpStatus } from "@prisma/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Plus, LogOut, Search, Mail, RefreshCw } from "lucide-react"
+import { Plus, LogOut, Search, Mail, RefreshCw, Filter, Download } from "lucide-react"
 import { signOut } from "next-auth/react"
 import { GuestTable } from "./guest-table"
 import { AddGuestDialog } from "./add-guest-dialog"
 import { Session } from "next-auth"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface GuestListManagerProps {
   initialGuests: Guest[]
@@ -25,12 +32,74 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [selectedGuests, setSelectedGuests] = useState<string[]>([])
   const [isSendingBulk, setIsSendingBulk] = useState(false)
+  const [invitationFilter, setInvitationFilter] = useState<InvitationStatus | "ALL">("ALL")
+  const [rsvpFilter, setRsvpFilter] = useState<RsvpStatus | "ALL">("ALL")
 
   const handleRefresh = () => {
     setIsRefreshing(true)
     router.refresh()
     toast.success("Guest list refreshed")
     setTimeout(() => setIsRefreshing(false), 1000)
+  }
+
+  const handleExportPDF = async () => {
+    try {
+      const { jsPDF } = await import("jspdf")
+      const autoTable = (await import("jspdf-autotable")).default
+
+      const doc = new jsPDF()
+
+      // Add title
+      doc.setFontSize(20)
+      doc.text("Wedding Guest List", 14, 20)
+
+      // Add subtitle with date
+      doc.setFontSize(10)
+      doc.text(`Generated on ${new Date().toLocaleDateString()}`, 14, 28)
+
+      // Add stats
+      doc.setFontSize(12)
+      doc.text(`Total Guests: ${stats.total} | Attending: ${stats.attending} | Not Attending: ${stats.notAttending} | Pending: ${stats.pending}`, 14, 36)
+
+      // Prepare table data
+      const tableData = filteredGuests.map(guest => [
+        `${guest.firstName} ${guest.lastName}${guest.plusOne ? " (+1)" : ""}`,
+        guest.email || "-",
+        guest.phone || "-",
+        [guest.relationToBride, guest.relationToGroom].filter(Boolean).join(", ") || "-",
+        guest.invitationStatus.replace("_", " "),
+        guest.rsvpStatus.replace("_", " "),
+        guest.dietaryRestrictions || "-",
+        guest.notes || "-"
+      ])
+
+      // Add table
+      autoTable(doc, {
+        head: [["Name", "Email", "Phone", "Relation", "Invitation", "RSVP", "Dietary", "Notes"]],
+        body: tableData,
+        startY: 42,
+        styles: { fontSize: 8, cellPadding: 2 },
+        headStyles: { fillColor: [196, 165, 123], textColor: 255 },
+        alternateRowStyles: { fillColor: [250, 248, 245] },
+        columnStyles: {
+          0: { cellWidth: 30 },
+          1: { cellWidth: 35 },
+          2: { cellWidth: 25 },
+          3: { cellWidth: 25 },
+          4: { cellWidth: 20 },
+          5: { cellWidth: 20 },
+          6: { cellWidth: 20 },
+          7: { cellWidth: 25 }
+        }
+      })
+
+      // Save the PDF
+      doc.save(`wedding-guest-list-${new Date().toISOString().split('T')[0]}.pdf`)
+      toast.success("Guest list exported successfully")
+    } catch (error) {
+      console.error("Failed to export PDF:", error)
+      toast.error("Failed to export guest list")
+    }
   }
 
   const handleBulkSendInvitations = async () => {
@@ -79,12 +148,17 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
 
   const filteredGuests = guests.filter((guest) => {
     const query = searchQuery.toLowerCase()
-    return (
+    const matchesSearch = (
       guest.firstName.toLowerCase().includes(query) ||
       guest.lastName.toLowerCase().includes(query) ||
       guest.email?.toLowerCase().includes(query) ||
       guest.phone?.toLowerCase().includes(query)
     )
+
+    const matchesInvitation = invitationFilter === "ALL" || guest.invitationStatus === invitationFilter
+    const matchesRsvp = rsvpFilter === "ALL" || guest.rsvpStatus === rsvpFilter
+
+    return matchesSearch && matchesInvitation && matchesRsvp
   })
 
   const stats = {
@@ -142,42 +216,90 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
       </div>
 
       {/* Actions Bar */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-6">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#7A6F5D]" />
-          <Input
-            placeholder="Search guests..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
+      <div className="flex flex-col gap-4 mb-6">
+        {/* Search and Filters Row */}
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#7A6F5D]" />
+            <Input
+              placeholder="Search guests..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+
+          <Select value={invitationFilter} onValueChange={(value) => setInvitationFilter(value as InvitationStatus | "ALL")}>
+            <SelectTrigger className="w-full sm:w-[200px]">
+              <div className="flex items-center gap-2">
+                <Filter className="h-4 w-4" />
+                <SelectValue placeholder="Invitation Status" />
+              </div>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">All Invitations</SelectItem>
+              <SelectItem value="NOT_SENT">Not Sent</SelectItem>
+              <SelectItem value="SENT">Sent</SelectItem>
+              <SelectItem value="DELIVERED">Delivered</SelectItem>
+              <SelectItem value="OPENED">Opened</SelectItem>
+              <SelectItem value="FAILED">Failed</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={rsvpFilter} onValueChange={(value) => setRsvpFilter(value as RsvpStatus | "ALL")}>
+            <SelectTrigger className="w-full sm:w-[200px]">
+              <div className="flex items-center gap-2">
+                <Filter className="h-4 w-4" />
+                <SelectValue placeholder="RSVP Status" />
+              </div>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">All RSVPs</SelectItem>
+              <SelectItem value="PENDING">Pending</SelectItem>
+              <SelectItem value="ATTENDING">Attending</SelectItem>
+              <SelectItem value="NOT_ATTENDING">Not Attending</SelectItem>
+              <SelectItem value="MAYBE">Maybe</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-        {selectedGuests.length > 0 && (
+
+        {/* Action Buttons Row */}
+        <div className="flex flex-col sm:flex-row gap-4">
+          {selectedGuests.length > 0 && (
+            <Button
+              onClick={handleBulkSendInvitations}
+              className="bg-[#C4A57B] hover:bg-[#B39568] text-white gap-2"
+              disabled={isSendingBulk}
+            >
+              <Mail className="h-4 w-4" />
+              {isSendingBulk ? "Sending..." : `Send Invitations (${selectedGuests.length})`}
+            </Button>
+          )}
           <Button
-            onClick={handleBulkSendInvitations}
-            className="bg-[#C4A57B] hover:bg-[#B39568] text-white gap-2"
-            disabled={isSendingBulk}
+            onClick={handleExportPDF}
+            variant="outline"
+            className="gap-2"
           >
-            <Mail className="h-4 w-4" />
-            {isSendingBulk ? "Sending..." : `Send Invitations (${selectedGuests.length})`}
+            <Download className="h-4 w-4" />
+            Download PDF
           </Button>
-        )}
-        <Button
-          onClick={handleRefresh}
-          variant="outline"
-          className="gap-2"
-          disabled={isRefreshing}
-        >
-          <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-          Refresh
-        </Button>
-        <Button
-          onClick={() => setIsAddDialogOpen(true)}
-          className="bg-[#C4A57B] hover:bg-[#B39568] text-white gap-2"
-        >
-          <Plus className="h-4 w-4" />
-          Add Guest
-        </Button>
+          <Button
+            onClick={handleRefresh}
+            variant="outline"
+            className="gap-2"
+            disabled={isRefreshing}
+          >
+            <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
+          <Button
+            onClick={() => setIsAddDialogOpen(true)}
+            className="bg-[#C4A57B] hover:bg-[#B39568] text-white gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            Add Guest
+          </Button>
+        </div>
       </div>
 
       {/* Guest Table */}

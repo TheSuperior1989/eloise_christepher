@@ -167,8 +167,11 @@ export function InvitationView({ guest }: InvitationViewProps) {
                     <p className="text-[#7A6F5D] mb-2">Kwalata Game Lodge</p>
                     <p className="text-sm text-[#7A6F5D]">Dinokeng Game Reserve, Hammanskraal, South Africa</p>
                     <div className="mt-3 p-3 bg-[#C4A57B]/10 rounded-lg">
-                      <p className="text-sm text-[#3D3630] font-semibold mb-1">Cost: R1,135 per person</p>
-                      <p className="text-xs text-[#7A6F5D]">(Breakfast included)</p>
+                      <p className="text-sm text-[#3D3630] font-semibold mb-1">Accommodation: R1,135 per guest per night</p>
+                      <p className="text-xs text-[#7A6F5D] mb-1">(Breakfast included)</p>
+                      <p className="text-xs text-[#7A6F5D] italic">
+                        Stay Friday & Saturday = 2 nights | Saturday only = 1 night
+                      </p>
                     </div>
                   </div>
                 </div>
