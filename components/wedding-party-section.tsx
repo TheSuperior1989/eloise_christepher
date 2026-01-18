@@ -2,16 +2,51 @@ import Image from "next/image"
 
 export function WeddingPartySection() {
   const bridalParty = [
-    { name: "Cherize Van Stade", role: "Maid of Honor", image: "/assets/wedding-party/cherize-van-stade.jpeg" },
-    { name: "Anieke Kelly", role: "Bridesmaid", image: "/assets/wedding-party/anieke-kelly.jpeg" },
-    { name: "Bianca", role: "Bridesmaid", image: "/assets/wedding-party/bianca.jpeg" },
+    {
+      name: "Cherise",
+      role: "Maid of Honor",
+      image: "/assets/wedding-party/cherize-van-stade.jpeg",
+      description: "The human version of 'we'll figure it out.' She didn't just witness our love story; she helped build it, laughed through it, and stood by us every step of the way."
+    },
+    {
+      name: "Annieke",
+      role: "Bridesmaid",
+      image: "/assets/wedding-party/anieke-kelly.jpeg",
+      description: "The friend who can turn a stressful moment into a full-on dance party and the reason Instagram notifications is permanently muted."
+    },
+    {
+      name: "Bianca",
+      role: "Bridesmaid",
+      image: "/assets/wedding-party/bianca.jpeg",
+      description: "The friend who knows all the tea, all our secrets, and still shows up with love, loyalty, and zero judgement. We wouldn't have it any other way."
+    },
   ]
 
   const groomsParty = [
-    { name: "Brian Le Roux", role: "Best Man", image: "/assets/wedding-party/brian-le-roux.jpeg" },
-    { name: "Jeandré Du Plessis", role: "Best Man", image: "/assets/wedding-party/jeandre-du-plessis.jpeg" },
-    { name: "Pieter Myburge", role: "Groomsman", image: "/assets/wedding-party/pieter-myburge.jpeg" },
-    { name: "André Bisset", role: "Groomsman", image: "/assets/wedding-party/andre-bisset.jpeg" },
+    {
+      name: "Brian",
+      role: "Best Man",
+      image: "/assets/wedding-party/brian-le-roux.jpeg",
+      description: "Meet Brian the protector, strength, and constant. He's guided us through life with love and support, and having him by our side means more than words can say."
+    },
+    {
+      name: "Jannie",
+      role: "Best Man",
+      image: "/assets/wedding-party/jeandre-du-plessis.jpeg",
+      description: "If loyalty, a snack addiction, and completely unmatched vibes had a child, it would be this person."
+    },
+    {
+      name: "Piet",
+      role: "Groomsman",
+      image: "/assets/wedding-party/pieter-myburge.jpeg",
+      description: "The human version of confetti: fun, loud, and absolutely impossible to ignore."
+    },
+    {
+      name: "André",
+      role: "Groomsman",
+      image: "/assets/wedding-party/andre-bisset.jpeg",
+      description: "Someone who knows all our secrets and still chooses to love us anyway. We couldn't imagine saying 'I do' without him by our side."
+    },
   ]
 
   return (
@@ -45,7 +80,8 @@ export function WeddingPartySection() {
                     </div>
                   </div>
                   <h4 className="font-serif text-xl text-[#3D3630] mb-1">{person.name}</h4>
-                  <p className="text-[#7A6F5D] text-sm font-serif italic">{person.role}</p>
+                  <p className="text-[#7A6F5D] text-sm font-serif italic mb-3">{person.role}</p>
+                  <p className="text-[#6B6560] text-sm font-serif leading-relaxed">{person.description}</p>
                 </div>
               ))}
             </div>
@@ -68,7 +104,8 @@ export function WeddingPartySection() {
                     </div>
                   </div>
                   <h4 className="font-serif text-xl text-[#3D3630] mb-1">{person.name}</h4>
-                  <p className="text-[#7A6F5D] text-sm font-serif italic">{person.role}</p>
+                  <p className="text-[#7A6F5D] text-sm font-serif italic mb-3">{person.role}</p>
+                  <p className="text-[#6B6560] text-sm font-serif leading-relaxed">{person.description}</p>
                 </div>
               ))}
             </div>

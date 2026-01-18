@@ -30,10 +30,67 @@ export function RegistrySection() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground font-serif text-sm leading-relaxed">
-                Your presence is enough of a present to us! But for those of you who are stubborn, we've put together a
+              <p className="text-muted-foreground font-serif text-sm leading-relaxed mb-4">
+                Your presence is enough of a present to us! But for those of you who are stubborn, we&apos;ve put together a
                 wish-list to help you out.
               </p>
+              <div className="bg-white/50 p-4 rounded-lg border border-accent/20">
+                <h4 className="font-serif font-semibold text-foreground mb-3">Our Wish List</h4>
+                <ul className="space-y-2 text-sm font-serif text-muted-foreground">
+                  <li className="flex items-start">
+                    <span className="text-accent mr-2">•</span>
+                    <span>Bath towels (gray/black)</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-accent mr-2">•</span>
+                    <span>Kitchen cloths</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-accent mr-2">•</span>
+                    <span>Nonstick pan set</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-accent mr-2">•</span>
+                    <span>Storage organizer containers</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-accent mr-2">•</span>
+                    <span>Bedding (king)</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-accent mr-2">•</span>
+                    <span>Home decor (neutral)</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-accent mr-2">•</span>
+                    <span>Slow cooker</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-accent mr-2">•</span>
+                    <span>Kitchen scale</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-accent mr-2">•</span>
+                    <span>Kitchen dinner set</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-accent mr-2">•</span>
+                    <span>Salad bowls</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-accent mr-2">•</span>
+                    <span>Grill tools</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-accent mr-2">•</span>
+                    <span>Heat pump tumble dryer</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-accent mr-2">•</span>
+                    <span>Small oven-safe containers</span>
+                  </li>
+                </ul>
+              </div>
             </CardContent>
           </Card>
 
@@ -60,10 +117,10 @@ export function RegistrySection() {
                   Banking Details
                 </h4>
                 <div className="space-y-2 text-sm font-serif text-muted-foreground">
-                  <p><span className="font-semibold text-foreground">Bank:</span> [Bank Name - To Be Added]</p>
-                  <p><span className="font-semibold text-foreground">Account Name:</span> [Account Name - To Be Added]</p>
-                  <p><span className="font-semibold text-foreground">Account Number:</span> [Account Number - To Be Added]</p>
-                  <p><span className="font-semibold text-foreground">Branch Code:</span> [Branch Code - To Be Added]</p>
+                  <p><span className="font-semibold text-foreground">Bank:</span> ABSA</p>
+                  <p><span className="font-semibold text-foreground">Account Holder:</span> CW Von Stade</p>
+                  <p><span className="font-semibold text-foreground">Account Number:</span> 4107055742</p>
+                  <p><span className="font-semibold text-foreground">Branch Code:</span> 632005</p>
                   <p className="text-xs italic mt-3">Please use your name as reference</p>
                 </div>
               </div>
