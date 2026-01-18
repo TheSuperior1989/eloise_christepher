@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
-// Lightweight middleware - auth check happens on the server side in pages
-export function middleware(request: NextRequest) {
+// Lightweight proxy - auth check happens on the server side in pages
+export function proxy(request: NextRequest) {
   const isAdminRoute = request.nextUrl.pathname.startsWith("/admin")
   const isLoginPage = request.nextUrl.pathname === "/admin/login"
 

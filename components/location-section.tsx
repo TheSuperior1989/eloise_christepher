@@ -23,7 +23,7 @@ export function LocationSection() {
           {/* Map */}
           <div className="w-full h-[400px] bg-secondary rounded-lg overflow-hidden shadow-lg border-4 border-white/30">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3594.8!2d28.3!3d-25.4!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e956b0b0b0b0b0b%3A0x0!2sKwalata%20Game%20Lodge!5e0!3m2!1sen!2sza!4v1234567890"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3595.0847!2d28.320814!3d-25.389463!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e9567e7f7f7f7f7%3A0x7f7f7f7f7f7f7f7f!2sKwalata%20Game%20Lodge!5e0!3m2!1sen!2sza!4v1234567890"
               width="100%"
               height="100%"
               style={{ border: 0 }}

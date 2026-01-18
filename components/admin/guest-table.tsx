@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Mail, Edit, Trash2, MoreHorizontal } from "lucide-react"
 import {
   DropdownMenu,
@@ -26,9 +27,11 @@ import { toast } from "sonner"
 interface GuestTableProps {
   guests: Guest[]
   onGuestsChange: (guests: Guest[]) => void
+  selectedGuests: string[]
+  onSelectionChange: (selected: string[]) => void
 }
 
-export function GuestTable({ guests, onGuestsChange }: GuestTableProps) {
+export function GuestTable({ guests, onGuestsChange, selectedGuests, onSelectionChange }: GuestTableProps) {
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null)
   const [sendingInvitation, setSendingInvitation] = useState<string | null>(null)
 
@@ -90,12 +93,39 @@ export function GuestTable({ guests, onGuestsChange }: GuestTableProps) {
     return <Badge className={config.className}>{config.label}</Badge>
   }
 
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      const guestsWithEmail = guests.filter(g => g.email).map(g => g.id)
+      onSelectionChange(guestsWithEmail)
+    } else {
+      onSelectionChange([])
+    }
+  }
+
+  const handleSelectGuest = (guestId: string, checked: boolean) => {
+    if (checked) {
+      onSelectionChange([...selectedGuests, guestId])
+    } else {
+      onSelectionChange(selectedGuests.filter(id => id !== guestId))
+    }
+  }
+
+  const allSelected = guests.filter(g => g.email).length > 0 &&
+    guests.filter(g => g.email).every(g => selectedGuests.includes(g.id))
+
   return (
     <>
       <div className="bg-white rounded-lg shadow-sm border border-[#E8E3DB] overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-12">
+                <Checkbox
+                  checked={allSelected}
+                  onCheckedChange={handleSelectAll}
+                  aria-label="Select all guests"
+                />
+              </TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Phone</TableHead>
@@ -108,13 +138,21 @@ export function GuestTable({ guests, onGuestsChange }: GuestTableProps) {
           <TableBody>
             {guests.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-[#7A6F5D]">
+                <TableCell colSpan={8} className="text-center py-8 text-[#7A6F5D]">
                   No guests found. Add your first guest to get started!
                 </TableCell>
               </TableRow>
             ) : (
               guests.map((guest) => (
                 <TableRow key={guest.id}>
+                  <TableCell>
+                    <Checkbox
+                      checked={selectedGuests.includes(guest.id)}
+                      onCheckedChange={(checked) => handleSelectGuest(guest.id, checked as boolean)}
+                      disabled={!guest.email}
+                      aria-label={`Select ${guest.firstName} ${guest.lastName}`}
+                    />
+                  </TableCell>
                   <TableCell className="font-medium">
                     {guest.firstName} {guest.lastName}
                     {guest.plusOne && (

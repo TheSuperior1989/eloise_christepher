@@ -11,7 +11,7 @@ interface TimeLeft {
 }
 
 export function CountdownTimer() {
-  const weddingDate = new Date("2026-04-04T14:00:00") // April 4th, 2026 at 2:00 PM
+  const weddingDate = new Date("2026-04-04T16:00:00") // April 4th, 2026 at 4:00 PM
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft())
   const [mounted, setMounted] = useState(false)
 

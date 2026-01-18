@@ -23,12 +23,58 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
   const [searchQuery, setSearchQuery] = useState("")
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const [selectedGuests, setSelectedGuests] = useState<string[]>([])
+  const [isSendingBulk, setIsSendingBulk] = useState(false)
 
   const handleRefresh = () => {
     setIsRefreshing(true)
     router.refresh()
     toast.success("Guest list refreshed")
     setTimeout(() => setIsRefreshing(false), 1000)
+  }
+
+  const handleBulkSendInvitations = async () => {
+    if (selectedGuests.length === 0) {
+      toast.error("Please select at least one guest")
+      return
+    }
+
+    const confirmed = confirm(
+      `Are you sure you want to send invitations to ${selectedGuests.length} guest(s)?`
+    )
+    if (!confirmed) return
+
+    setIsSendingBulk(true)
+    let successCount = 0
+    let failCount = 0
+
+    for (const guestId of selectedGuests) {
+      try {
+        const { sendInvitation } = await import("@/app/admin/actions")
+        await sendInvitation(guestId)
+        successCount++
+
+        // Update guest status in local state
+        setGuests(prev => prev.map(g =>
+          g.id === guestId
+            ? { ...g, invitationStatus: "SENT" as const, invitationSentAt: new Date() }
+            : g
+        ))
+      } catch (error) {
+        failCount++
+        console.error(`Failed to send invitation to guest ${guestId}:`, error)
+      }
+    }
+
+    setIsSendingBulk(false)
+    setSelectedGuests([])
+
+    if (successCount > 0) {
+      toast.success(`Successfully sent ${successCount} invitation(s)`)
+    }
+    if (failCount > 0) {
+      toast.error(`Failed to send ${failCount} invitation(s)`)
+    }
   }
 
   const filteredGuests = guests.filter((guest) => {
@@ -106,6 +152,16 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
             className="pl-10"
           />
         </div>
+        {selectedGuests.length > 0 && (
+          <Button
+            onClick={handleBulkSendInvitations}
+            className="bg-[#C4A57B] hover:bg-[#B39568] text-white gap-2"
+            disabled={isSendingBulk}
+          >
+            <Mail className="h-4 w-4" />
+            {isSendingBulk ? "Sending..." : `Send Invitations (${selectedGuests.length})`}
+          </Button>
+        )}
         <Button
           onClick={handleRefresh}
           variant="outline"
@@ -125,7 +181,12 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
       </div>
 
       {/* Guest Table */}
-      <GuestTable guests={filteredGuests} onGuestsChange={setGuests} />
+      <GuestTable
+        guests={filteredGuests}
+        onGuestsChange={setGuests}
+        selectedGuests={selectedGuests}
+        onSelectionChange={setSelectedGuests}
+      />
 
       {/* Add Guest Dialog */}
       <AddGuestDialog

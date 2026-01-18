@@ -112,8 +112,9 @@ export async function sendInvitation(guestId: string) {
     throw new Error("Guest not found or no email address")
   }
 
-  // Generate RSVP URL
+  // Generate URLs
   const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000"
+  const invitationUrl = `${baseUrl}/invitation/${guest.invitationToken}`
   const rsvpUrl = `${baseUrl}/rsvp/${guest.invitationToken}`
 
   try {
@@ -129,6 +130,7 @@ export async function sendInvitation(guestId: string) {
     }
 
     console.log(`Sending invitation to ${guest.email} (${guest.firstName} ${guest.lastName})`)
+    console.log(`Invitation URL: ${invitationUrl}`)
     console.log(`RSVP URL: ${rsvpUrl}`)
     console.log(`From email: ${process.env.RESEND_FROM_EMAIL}`)
 
@@ -141,6 +143,7 @@ export async function sendInvitation(guestId: string) {
       react: WeddingInvitationEmail({
         guestName: `${guest.firstName} ${guest.lastName}`,
         rsvpUrl,
+        invitationUrl,
       }),
     })
 

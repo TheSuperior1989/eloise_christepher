@@ -14,12 +14,15 @@ import {
 interface WeddingInvitationEmailProps {
   guestName: string
   rsvpUrl: string
+  invitationUrl?: string
 }
 
 export default function WeddingInvitationEmail({
   guestName = "Guest",
   rsvpUrl = "https://example.com/rsvp/token",
+  invitationUrl,
 }: WeddingInvitationEmailProps) {
+  const viewInvitationUrl = invitationUrl || rsvpUrl
   return (
     <Html>
       <Head />
@@ -83,10 +86,10 @@ export default function WeddingInvitationEmail({
                 </Text>
               </Section>
 
-              {/* RSVP Button */}
+              {/* View Invitation Button */}
               <Section style={rsvpSection}>
-                <Link href={rsvpUrl} style={rsvpButton}>
-                  RSVP Now
+                <Link href={viewInvitationUrl} style={rsvpButton}>
+                  View Your Invitation
                 </Link>
                 <Text style={rsvpDeadline}>
                   Please respond by March 1, 2026
