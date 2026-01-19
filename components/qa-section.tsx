@@ -23,7 +23,7 @@ export function QASection() {
     },
     {
       question: "When is the RSVP deadline?",
-      answer: "Please RSVP before or on March 11th 2026, so we can have an accurate headcount.",
+      answer: "Please RSVP before or on March 1st 2026, so we can have an accurate headcount.",
     },
     {
       question: "Where should I park?",
