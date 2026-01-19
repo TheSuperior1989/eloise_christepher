@@ -107,7 +107,7 @@ export default function WeddingInvitationEmail({
                 <Text style={websiteDescription}>
                   Find all the details about our special day including venue information, schedule, accommodation, and more!
                 </Text>
-                <Link href="https://eloise-and-christopher.vercel.app" style={websiteButton}>
+                <Link href="https://eloise-christepher.vercel.app" style={websiteButton}>
                   Visit Wedding Website
                 </Link>
               </Section>

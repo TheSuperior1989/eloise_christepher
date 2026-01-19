@@ -97,8 +97,8 @@ export function RsvpForm({ guest }: RsvpFormProps) {
           {rsvpStatus === "ATTENDING" && attendanceDay && (
             <p className="text-sm text-[#7A6F5D] mt-4">
               <strong>Attending:</strong>{" "}
-              {attendanceDay === "FRIDAY" && "Friday Only"}
-              {attendanceDay === "SATURDAY" && "Saturday Only"}
+              {attendanceDay === "FRIDAY" && "Friday"}
+              {attendanceDay === "SATURDAY" && "Saturday"}
               {attendanceDay === "BOTH" && "Both Friday & Saturday"}
               {attendanceDay === "NOT_SLEEPING_OVER" && "Not Sleeping Over (Ceremony Only)"}
             </p>
@@ -203,7 +203,7 @@ export function RsvpForm({ guest }: RsvpFormProps) {
                 className="flex items-center gap-2 cursor-pointer flex-1"
               >
                 <Calendar className="w-5 h-5 text-[#C4A57B]" />
-                <span className="text-base">Friday Only</span>
+                <span className="text-base">Friday</span>
               </Label>
             </div>
             <div className="flex items-center space-x-3 p-4 border-2 border-[#E8E3DB] rounded-lg hover:border-[#C4A57B] transition-colors cursor-pointer">
@@ -213,7 +213,7 @@ export function RsvpForm({ guest }: RsvpFormProps) {
                 className="flex items-center gap-2 cursor-pointer flex-1"
               >
                 <Calendar className="w-5 h-5 text-[#C4A57B]" />
-                <span className="text-base">Saturday Only</span>
+                <span className="text-base">Saturday</span>
               </Label>
             </div>
             <div className="flex items-center space-x-3 p-4 border-2 border-[#E8E3DB] rounded-lg hover:border-[#C4A57B] transition-colors cursor-pointer">
