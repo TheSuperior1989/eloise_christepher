@@ -441,9 +441,6 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
               <SelectItem value="ALL">All Invitations</SelectItem>
               <SelectItem value="NOT_SENT">Not Sent</SelectItem>
               <SelectItem value="SENT">Sent</SelectItem>
-              <SelectItem value="DELIVERED">Delivered</SelectItem>
-              <SelectItem value="OPENED">Opened</SelectItem>
-              <SelectItem value="FAILED">Failed</SelectItem>
             </SelectContent>
           </Select>
 
