@@ -89,11 +89,27 @@ export default function WeddingInvitationEmail({
               {/* View Invitation Button */}
               <Section style={rsvpSection}>
                 <Link href={viewInvitationUrl} style={rsvpButton}>
-                  View Your Invitation
+                  View Your Invitation & RSVP
                 </Link>
                 <Text style={rsvpDeadline}>
                   Please respond by March 1, 2026
                 </Text>
+              </Section>
+
+              {/* Divider */}
+              <div style={divider}></div>
+
+              {/* Wedding Website Section - Prominent */}
+              <Section style={websiteSection}>
+                <Text style={websiteHeading}>
+                  📱 Visit Our Wedding Website
+                </Text>
+                <Text style={websiteDescription}>
+                  Find all the details about our special day including venue information, schedule, accommodation, and more!
+                </Text>
+                <Link href="https://eloise-and-christopher.vercel.app" style={websiteButton}>
+                  Visit Wedding Website
+                </Link>
               </Section>
 
               {/* Footer */}
@@ -108,16 +124,6 @@ export default function WeddingInvitationEmail({
                 </Text>
               </Section>
             </div>
-          </Section>
-
-          {/* Additional Info */}
-          <Section style={additionalInfo}>
-            <Text style={infoText}>
-              For more information, visit our wedding website:
-            </Text>
-            <Link href="https://eloise-and-christopher.vercel.app" style={websiteLink}>
-              eloise-and-christopher.vercel.app
-            </Link>
           </Section>
         </Container>
       </Body>
@@ -304,6 +310,41 @@ const footerSignature = {
   margin: "15px 0 0 0",
   fontStyle: "italic",
   fontFamily: "'Brush Script MT', cursive",
+}
+
+const websiteSection = {
+  textAlign: "center" as const,
+  padding: "25px 20px",
+  backgroundColor: "#F5F2ED",
+  borderRadius: "8px",
+  margin: "20px 0",
+}
+
+const websiteHeading = {
+  fontSize: "20px",
+  fontWeight: "600",
+  color: "#3D3630",
+  margin: "0 0 10px 0",
+}
+
+const websiteDescription = {
+  fontSize: "15px",
+  color: "#7A6F5D",
+  margin: "0 0 20px 0",
+  lineHeight: "1.5",
+}
+
+const websiteButton = {
+  display: "inline-block",
+  backgroundColor: "#3D3630",
+  color: "#FFFFFF",
+  padding: "14px 40px",
+  borderRadius: "4px",
+  textDecoration: "none",
+  fontSize: "16px",
+  fontWeight: "600",
+  letterSpacing: "1px",
+  textTransform: "uppercase" as const,
 }
 
 const additionalInfo = {

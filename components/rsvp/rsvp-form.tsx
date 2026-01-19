@@ -9,7 +9,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Textarea } from "@/components/ui/textarea"
 import { submitRsvp } from "@/app/rsvp/actions"
 import { toast } from "sonner"
-import { Check, X, HelpCircle, Calendar } from "lucide-react"
+import { Check, X, HelpCircle, Calendar, ExternalLink } from "lucide-react"
+import Link from "next/link"
 
 interface RsvpFormProps {
   guest: Guest
@@ -112,6 +113,30 @@ export function RsvpForm({ guest }: RsvpFormProps) {
               <strong>Dietary Requirements:</strong> {dietaryRestrictions}
             </p>
           )}
+        </div>
+
+        {/* Prominent Website Button */}
+        <div className="mt-8 pt-8 border-t-2 border-[#C4A57B]/20">
+          <div className="bg-gradient-to-br from-[#F5F2ED] to-[#FAF8F5] p-8 rounded-lg border-2 border-[#C4A57B]/30 shadow-lg">
+            <h3 className="text-2xl font-serif text-[#3D3630] mb-3">
+              📱 Next Step: Visit Our Wedding Website
+            </h3>
+            <p className="text-[#7A6F5D] mb-6 leading-relaxed">
+              Find all the details about our special day including venue information, schedule, accommodation options, registry, and more!
+            </p>
+            <Link href="/" target="_blank">
+              <Button
+                size="lg"
+                className="bg-[#3D3630] hover:bg-[#2D2620] text-white px-12 py-6 text-lg font-serif rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 gap-3"
+              >
+                <ExternalLink className="w-5 h-5" />
+                Visit Wedding Website
+              </Button>
+            </Link>
+            <p className="text-sm text-[#7A6F5D] mt-4 italic">
+              Bookmark it for easy access to all wedding information
+            </p>
+          </div>
         </div>
       </div>
     )
