@@ -36,6 +36,7 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
   const [rsvpFilter, setRsvpFilter] = useState<RsvpStatus | "ALL">("ALL")
   const [attendanceDayFilter, setAttendanceDayFilter] = useState<AttendanceDay | "ALL" | "NONE">("ALL")
   const [isResettingRsvp, setIsResettingRsvp] = useState(false)
+  const [isResettingAll, setIsResettingAll] = useState(false)
 
   const handleRefresh = () => {
     setIsRefreshing(true)
@@ -218,6 +219,60 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
       toast.error("Failed to reset RSVP status")
     } finally {
       setIsResettingRsvp(false)
+    }
+  }
+
+  const handleResetAllGuests = async () => {
+    const confirmed = confirm(
+      `⚠️ WARNING: This will reset ALL ${guests.length} guests to a fresh state!\n\n` +
+      `This will:\n` +
+      `• Set all invitation statuses to "NOT SENT"\n` +
+      `• Clear all invitation sent dates\n` +
+      `• Reset all RSVP statuses to "PENDING"\n` +
+      `• Clear all attendance day selections\n` +
+      `• Clear all dietary restrictions\n` +
+      `• Clear all RSVP submission dates\n\n` +
+      `You will be able to send fresh invitations to everyone.\n\n` +
+      `Are you absolutely sure you want to proceed?`
+    )
+    if (!confirmed) return
+
+    // Double confirmation for safety
+    const doubleConfirm = confirm(
+      `This action cannot be undone!\n\n` +
+      `Type "RESET" in the next prompt to confirm.`
+    )
+    if (!doubleConfirm) return
+
+    const finalConfirm = prompt('Type "RESET" to confirm:')
+    if (finalConfirm !== "RESET") {
+      toast.error("Reset cancelled - confirmation text did not match")
+      return
+    }
+
+    setIsResettingAll(true)
+    try {
+      const { resetAllGuestsToFresh } = await import("@/app/admin/actions")
+      const result = await resetAllGuestsToFresh()
+
+      // Update local state
+      setGuests(guests.map(guest => ({
+        ...guest,
+        invitationStatus: "NOT_SENT" as InvitationStatus,
+        invitationSentAt: null,
+        rsvpStatus: "PENDING" as RsvpStatus,
+        attendanceDay: null,
+        dietaryRestrictions: null,
+        rsvpSubmittedAt: null,
+      })))
+
+      setSelectedGuests([])
+      toast.success(`Successfully reset all ${result.count} guests to fresh state!`)
+    } catch (error) {
+      console.error("Failed to reset all guests:", error)
+      toast.error("Failed to reset all guests")
+    } finally {
+      setIsResettingAll(false)
     }
   }
 
@@ -412,6 +467,15 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
           >
             <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             Refresh
+          </Button>
+          <Button
+            onClick={handleResetAllGuests}
+            variant="destructive"
+            className="gap-2 bg-red-600 hover:bg-red-700"
+            disabled={isResettingAll}
+          >
+            <RefreshCw className={`h-4 w-4 ${isResettingAll ? 'animate-spin' : ''}`} />
+            {isResettingAll ? "Resetting All..." : "Reset All Guests"}
           </Button>
           <Button
             onClick={() => setIsAddDialogOpen(true)}

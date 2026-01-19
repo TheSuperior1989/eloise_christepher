@@ -202,6 +202,31 @@ export async function bulkResetRsvp(guestIds: string[]) {
   return { success: true, count: guestIds.length }
 }
 
+export async function resetAllGuestsToFresh() {
+  const session = await auth()
+  if (!session) {
+    throw new Error("Unauthorized")
+  }
+
+  // Get count of guests before reset
+  const guestCount = await prisma.guest.count()
+
+  // Reset all guests to fresh state
+  await prisma.guest.updateMany({
+    data: {
+      invitationStatus: "NOT_SENT",
+      invitationSentAt: null,
+      rsvpStatus: "PENDING",
+      attendanceDay: null,
+      dietaryRestrictions: null,
+      rsvpSubmittedAt: null,
+    },
+  })
+
+  revalidatePath("/admin/dashboard")
+  return { success: true, count: guestCount }
+}
+
 export async function sendInvitation(guestId: string) {
   const session = await auth()
   if (!session) {
