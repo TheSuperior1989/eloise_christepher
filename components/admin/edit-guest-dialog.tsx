@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Guest, InvitationStatus, RsvpStatus } from "@prisma/client"
+import { Guest, InvitationStatus, RsvpStatus, AttendanceDay } from "@prisma/client"
 import {
   Dialog,
   DialogContent,
@@ -51,6 +51,7 @@ export function EditGuestDialog({
     notes: guest.notes || "",
     invitationStatus: guest.invitationStatus,
     rsvpStatus: guest.rsvpStatus,
+    attendanceDay: guest.attendanceDay || "",
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -67,6 +68,7 @@ export function EditGuestDialog({
         plusOneName: formData.plusOneName || undefined,
         dietaryRestrictions: formData.dietaryRestrictions || undefined,
         notes: formData.notes || undefined,
+        attendanceDay: formData.attendanceDay || undefined,
       })
 
       onGuestUpdated(updatedGuest)
@@ -201,6 +203,28 @@ export function EditGuestDialog({
                 </SelectContent>
               </Select>
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="attendanceDay">Attendance Day</Label>
+            <Select
+              value={formData.attendanceDay}
+              onValueChange={(value) =>
+                setFormData({ ...formData, attendanceDay: value })
+              }
+              disabled={loading}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select attendance day" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">None</SelectItem>
+                <SelectItem value="FRIDAY">Friday</SelectItem>
+                <SelectItem value="SATURDAY">Saturday</SelectItem>
+                <SelectItem value="BOTH">Both Days</SelectItem>
+                <SelectItem value="NOT_SLEEPING_OVER">Not Sleeping Over</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="flex items-center space-x-2">

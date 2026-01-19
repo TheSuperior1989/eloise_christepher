@@ -34,6 +34,8 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
   const [isSendingBulk, setIsSendingBulk] = useState(false)
   const [invitationFilter, setInvitationFilter] = useState<InvitationStatus | "ALL">("ALL")
   const [rsvpFilter, setRsvpFilter] = useState<RsvpStatus | "ALL">("ALL")
+  const [attendanceDayFilter, setAttendanceDayFilter] = useState<AttendanceDay | "ALL" | "NONE">("ALL")
+  const [isResettingRsvp, setIsResettingRsvp] = useState(false)
 
   const handleRefresh = () => {
     setIsRefreshing(true)
@@ -60,6 +62,27 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
       // Add stats
       doc.setFontSize(12)
       doc.text(`Total Guests: ${stats.total} | Attending: ${stats.attending} | Not Attending: ${stats.notAttending} | Pending: ${stats.pending}`, 14, 36)
+
+      // Add active filters info
+      const activeFilters = []
+      if (invitationFilter !== "ALL") activeFilters.push(`Invitation: ${invitationFilter.replace("_", " ")}`)
+      if (rsvpFilter !== "ALL") activeFilters.push(`RSVP: ${rsvpFilter.replace("_", " ")}`)
+      if (attendanceDayFilter !== "ALL") {
+        const dayLabel = attendanceDayFilter === "NONE" ? "None Selected" :
+                        attendanceDayFilter === "FRIDAY" ? "Friday" :
+                        attendanceDayFilter === "SATURDAY" ? "Saturday" :
+                        attendanceDayFilter === "BOTH" ? "Both Days" :
+                        "Not Sleeping Over"
+        activeFilters.push(`Day: ${dayLabel}`)
+      }
+      if (searchQuery) activeFilters.push(`Search: "${searchQuery}"`)
+
+      let startY = 42
+      if (activeFilters.length > 0) {
+        doc.setFontSize(10)
+        doc.text(`Active Filters: ${activeFilters.join(" | ")}`, 14, 42)
+        startY = 48
+      }
 
       // Prepare table data
       const tableData = filteredGuests.map(guest => {
@@ -88,7 +111,7 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
       autoTable(doc, {
         head: [["Name", "Email", "Phone", "Relation", "Invitation", "RSVP", "Day", "Dietary", "Notes"]],
         body: tableData,
-        startY: 42,
+        startY: startY,
         styles: { fontSize: 7, cellPadding: 2 },
         headStyles: { fillColor: [196, 165, 123], textColor: 255 },
         alternateRowStyles: { fillColor: [250, 248, 245] },
@@ -158,6 +181,46 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
     }
   }
 
+  const handleBulkResetRsvp = async () => {
+    if (selectedGuests.length === 0) {
+      toast.error("Please select at least one guest")
+      return
+    }
+
+    const confirmed = confirm(
+      `Are you sure you want to reset RSVP status for ${selectedGuests.length} guest(s)? This will clear their RSVP status, attendance day, and dietary restrictions.`
+    )
+    if (!confirmed) return
+
+    setIsResettingRsvp(true)
+    try {
+      const { bulkResetRsvp } = await import("@/app/admin/actions")
+      await bulkResetRsvp(selectedGuests)
+
+      // Update local state
+      setGuests(guests.map(guest => {
+        if (selectedGuests.includes(guest.id)) {
+          return {
+            ...guest,
+            rsvpStatus: "PENDING" as RsvpStatus,
+            attendanceDay: null,
+            dietaryRestrictions: null,
+            rsvpSubmittedAt: null,
+          }
+        }
+        return guest
+      }))
+
+      setSelectedGuests([])
+      toast.success(`Successfully reset RSVP status for ${selectedGuests.length} guest(s)`)
+    } catch (error) {
+      console.error("Failed to reset RSVP:", error)
+      toast.error("Failed to reset RSVP status")
+    } finally {
+      setIsResettingRsvp(false)
+    }
+  }
+
   const filteredGuests = guests.filter((guest) => {
     const query = searchQuery.toLowerCase()
     const matchesSearch = (
@@ -169,8 +232,12 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
 
     const matchesInvitation = invitationFilter === "ALL" || guest.invitationStatus === invitationFilter
     const matchesRsvp = rsvpFilter === "ALL" || guest.rsvpStatus === rsvpFilter
+    const matchesAttendanceDay =
+      attendanceDayFilter === "ALL" ||
+      (attendanceDayFilter === "NONE" && !guest.attendanceDay) ||
+      guest.attendanceDay === attendanceDayFilter
 
-    return matchesSearch && matchesInvitation && matchesRsvp
+    return matchesSearch && matchesInvitation && matchesRsvp && matchesAttendanceDay
   })
 
   const stats = {
@@ -287,19 +354,47 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
               <SelectItem value="MAYBE">Maybe</SelectItem>
             </SelectContent>
           </Select>
+
+          <Select value={attendanceDayFilter} onValueChange={(value) => setAttendanceDayFilter(value as AttendanceDay | "ALL" | "NONE")}>
+            <SelectTrigger className="w-full sm:w-[200px]">
+              <div className="flex items-center gap-2">
+                <Filter className="h-4 w-4" />
+                <SelectValue placeholder="Attendance Day" />
+              </div>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">All Days</SelectItem>
+              <SelectItem value="NONE">None Selected</SelectItem>
+              <SelectItem value="FRIDAY">Friday</SelectItem>
+              <SelectItem value="SATURDAY">Saturday</SelectItem>
+              <SelectItem value="BOTH">Both Days</SelectItem>
+              <SelectItem value="NOT_SLEEPING_OVER">Not Sleeping Over</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Action Buttons Row */}
         <div className="flex flex-col sm:flex-row gap-4">
           {selectedGuests.length > 0 && (
-            <Button
-              onClick={handleBulkSendInvitations}
-              className="bg-[#C4A57B] hover:bg-[#B39568] text-white gap-2"
-              disabled={isSendingBulk}
-            >
-              <Mail className="h-4 w-4" />
-              {isSendingBulk ? "Sending..." : `Send Invitations (${selectedGuests.length})`}
-            </Button>
+            <>
+              <Button
+                onClick={handleBulkSendInvitations}
+                className="bg-[#C4A57B] hover:bg-[#B39568] text-white gap-2"
+                disabled={isSendingBulk}
+              >
+                <Mail className="h-4 w-4" />
+                {isSendingBulk ? "Sending..." : `Send Invitations (${selectedGuests.length})`}
+              </Button>
+              <Button
+                onClick={handleBulkResetRsvp}
+                variant="destructive"
+                className="gap-2"
+                disabled={isResettingRsvp}
+              >
+                <RefreshCw className="h-4 w-4" />
+                {isResettingRsvp ? "Resetting..." : `Reset RSVP (${selectedGuests.length})`}
+              </Button>
+            </>
           )}
           <Button
             onClick={handleExportPDF}

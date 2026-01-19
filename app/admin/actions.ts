@@ -93,6 +93,7 @@ export async function updateGuest(
     notes?: string
     invitationStatus?: InvitationStatus
     rsvpStatus?: RsvpStatus
+    attendanceDay?: string
   }
 ) {
   try {
@@ -175,6 +176,30 @@ export async function deleteGuest(id: string) {
     // Re-throw with a user-friendly message
     throw new Error(error.message || "Failed to delete guest. Please try again.")
   }
+}
+
+export async function bulkResetRsvp(guestIds: string[]) {
+  const session = await auth()
+  if (!session) {
+    throw new Error("Unauthorized")
+  }
+
+  await prisma.guest.updateMany({
+    where: {
+      id: {
+        in: guestIds,
+      },
+    },
+    data: {
+      rsvpStatus: "PENDING",
+      attendanceDay: null,
+      dietaryRestrictions: null,
+      rsvpSubmittedAt: null,
+    },
+  })
+
+  revalidatePath("/admin/dashboard")
+  return { success: true, count: guestIds.length }
 }
 
 export async function sendInvitation(guestId: string) {
