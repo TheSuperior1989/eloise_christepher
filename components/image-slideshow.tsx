@@ -14,7 +14,7 @@ import {
 export function ImageSlideshow() {
   const [mounted, setMounted] = useState(false)
   const [api, setApi] = useState<CarouselApi>()
-  const autoplayRef = useRef<NodeJS.Timeout>()
+  const autoplayRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
   useEffect(() => {
     setMounted(true)
