@@ -72,7 +72,9 @@ export function EditGuestDialog({
       onGuestUpdated(updatedGuest)
       toast.success("Guest updated successfully")
     } catch (error) {
-      toast.error("Failed to update guest")
+      console.error("Error updating guest:", error)
+      const errorMessage = error instanceof Error ? error.message : "Failed to update guest"
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }

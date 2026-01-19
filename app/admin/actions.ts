@@ -71,18 +71,27 @@ export async function updateGuest(
     rsvpStatus?: RsvpStatus
   }
 ) {
-  const session = await auth()
-  if (!session) {
-    throw new Error("Unauthorized")
+  try {
+    const session = await auth()
+    if (!session) {
+      throw new Error("Unauthorized")
+    }
+
+    console.log("Updating guest:", id, "with data:", data)
+
+    const guest = await prisma.guest.update({
+      where: { id },
+      data,
+    })
+
+    console.log("Guest updated successfully:", guest.id)
+
+    revalidatePath("/admin/dashboard")
+    return guest
+  } catch (error) {
+    console.error("Error in updateGuest:", error)
+    throw error
   }
-
-  const guest = await prisma.guest.update({
-    where: { id },
-    data,
-  })
-
-  revalidatePath("/admin/dashboard")
-  return guest
 }
 
 export async function deleteGuest(id: string) {
