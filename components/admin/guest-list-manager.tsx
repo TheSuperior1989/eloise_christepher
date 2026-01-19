@@ -355,11 +355,11 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         <div className="bg-white p-6 rounded-lg shadow-sm border border-[#E8E3DB]">
           <div className="text-2xl font-bold text-[#C4A57B]">{stats.attendingFriday}</div>
-          <div className="text-sm text-[#7A6F5D]">Attending Friday (for catering)</div>
+          <div className="text-sm text-[#7A6F5D]">Sleeping Over Friday Night (for catering)</div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-sm border border-[#E8E3DB]">
           <div className="text-2xl font-bold text-[#C4A57B]">{stats.attendingSaturday}</div>
-          <div className="text-sm text-[#7A6F5D]">Attending Saturday</div>
+          <div className="text-sm text-[#7A6F5D]">Sleeping Over Saturday Night</div>
         </div>
       </div>
 
