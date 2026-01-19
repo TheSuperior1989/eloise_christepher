@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Guest, InvitationStatus, RsvpStatus, AttendanceDay } from "@prisma/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Plus, LogOut, Search, Mail, RefreshCw, Filter, Download } from "lucide-react"
+import { Plus, LogOut, Search, Mail, RefreshCw, Filter, Download, X } from "lucide-react"
 import { signOut } from "next-auth/react"
 import { GuestTable } from "./guest-table"
 import { AddGuestDialog } from "./add-guest-dialog"
@@ -373,8 +373,17 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
               placeholder="Search guests..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="pl-10 pr-10"
             />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#7A6F5D] hover:text-[#3D3630] transition-colors"
+                aria-label="Clear search"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
 
           <Select value={invitationFilter} onValueChange={(value) => setInvitationFilter(value as InvitationStatus | "ALL")}>
@@ -426,6 +435,24 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
               <SelectItem value="NOT_SLEEPING_OVER">Not Sleeping Over</SelectItem>
             </SelectContent>
           </Select>
+
+          {/* Clear Filters Button */}
+          {(searchQuery || invitationFilter !== "ALL" || rsvpFilter !== "ALL" || attendanceDayFilter !== "ALL") && (
+            <Button
+              onClick={() => {
+                setSearchQuery("")
+                setInvitationFilter("ALL")
+                setRsvpFilter("ALL")
+                setAttendanceDayFilter("ALL")
+                toast.success("Filters cleared")
+              }}
+              variant="outline"
+              className="gap-2 whitespace-nowrap"
+            >
+              <X className="h-4 w-4" />
+              Clear Filters
+            </Button>
+          )}
         </div>
 
         {/* Action Buttons Row */}
