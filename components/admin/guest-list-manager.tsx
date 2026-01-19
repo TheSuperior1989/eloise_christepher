@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Guest, InvitationStatus, RsvpStatus } from "@prisma/client"
+import { Guest, InvitationStatus, RsvpStatus, AttendanceDay } from "@prisma/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Plus, LogOut, Search, Mail, RefreshCw, Filter, Download } from "lucide-react"
@@ -62,34 +62,46 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
       doc.text(`Total Guests: ${stats.total} | Attending: ${stats.attending} | Not Attending: ${stats.notAttending} | Pending: ${stats.pending}`, 14, 36)
 
       // Prepare table data
-      const tableData = filteredGuests.map(guest => [
-        `${guest.firstName} ${guest.lastName}${guest.plusOne ? " (+1)" : ""}`,
-        guest.email || "-",
-        guest.phone || "-",
-        [guest.relationToBride, guest.relationToGroom].filter(Boolean).join(", ") || "-",
-        guest.invitationStatus.replace("_", " "),
-        guest.rsvpStatus.replace("_", " "),
-        guest.dietaryRestrictions || "-",
-        guest.notes || "-"
-      ])
+      const tableData = filteredGuests.map(guest => {
+        let attendanceDay = "-"
+        if (guest.attendanceDay) {
+          attendanceDay = guest.attendanceDay === "FRIDAY" ? "Friday" :
+                         guest.attendanceDay === "SATURDAY" ? "Saturday" :
+                         guest.attendanceDay === "BOTH" ? "Both Days" :
+                         "Not Sleeping"
+        }
+
+        return [
+          `${guest.firstName} ${guest.lastName}${guest.plusOne ? " (+1)" : ""}`,
+          guest.email || "-",
+          guest.phone || "-",
+          [guest.relationToBride, guest.relationToGroom].filter(Boolean).join(", ") || "-",
+          guest.invitationStatus.replace("_", " "),
+          guest.rsvpStatus.replace("_", " "),
+          attendanceDay,
+          guest.dietaryRestrictions || "-",
+          guest.notes || "-"
+        ]
+      })
 
       // Add table
       autoTable(doc, {
-        head: [["Name", "Email", "Phone", "Relation", "Invitation", "RSVP", "Dietary", "Notes"]],
+        head: [["Name", "Email", "Phone", "Relation", "Invitation", "RSVP", "Day", "Dietary", "Notes"]],
         body: tableData,
         startY: 42,
-        styles: { fontSize: 8, cellPadding: 2 },
+        styles: { fontSize: 7, cellPadding: 2 },
         headStyles: { fillColor: [196, 165, 123], textColor: 255 },
         alternateRowStyles: { fillColor: [250, 248, 245] },
         columnStyles: {
-          0: { cellWidth: 30 },
-          1: { cellWidth: 35 },
-          2: { cellWidth: 25 },
-          3: { cellWidth: 25 },
-          4: { cellWidth: 20 },
-          5: { cellWidth: 20 },
-          6: { cellWidth: 20 },
-          7: { cellWidth: 25 }
+          0: { cellWidth: 28 },
+          1: { cellWidth: 32 },
+          2: { cellWidth: 22 },
+          3: { cellWidth: 22 },
+          4: { cellWidth: 18 },
+          5: { cellWidth: 18 },
+          6: { cellWidth: 18 },
+          7: { cellWidth: 20 },
+          8: { cellWidth: 22 }
         }
       })
 
@@ -167,6 +179,8 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
     attending: guests.filter((g) => g.rsvpStatus === "ATTENDING").length,
     notAttending: guests.filter((g) => g.rsvpStatus === "NOT_ATTENDING").length,
     pending: guests.filter((g) => g.rsvpStatus === "PENDING").length,
+    attendingFriday: guests.filter((g) => g.rsvpStatus === "ATTENDING" && (g.attendanceDay === "FRIDAY" || g.attendanceDay === "BOTH")).length,
+    attendingSaturday: guests.filter((g) => g.rsvpStatus === "ATTENDING" && (g.attendanceDay === "SATURDAY" || g.attendanceDay === "BOTH")).length,
   }
 
   return (
@@ -192,7 +206,7 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
         <div className="bg-white p-6 rounded-lg shadow-sm border border-[#E8E3DB]">
           <div className="text-2xl font-bold text-[#3D3630]">{stats.total}</div>
           <div className="text-sm text-[#7A6F5D]">Total Guests</div>
@@ -212,6 +226,18 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
         <div className="bg-white p-6 rounded-lg shadow-sm border border-[#E8E3DB]">
           <div className="text-2xl font-bold text-orange-600">{stats.pending}</div>
           <div className="text-sm text-[#7A6F5D]">Pending RSVP</div>
+        </div>
+      </div>
+
+      {/* Attendance Day Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-[#E8E3DB]">
+          <div className="text-2xl font-bold text-[#C4A57B]">{stats.attendingFriday}</div>
+          <div className="text-sm text-[#7A6F5D]">Attending Friday (for catering)</div>
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-[#E8E3DB]">
+          <div className="text-2xl font-bold text-[#C4A57B]">{stats.attendingSaturday}</div>
+          <div className="text-sm text-[#7A6F5D]">Attending Saturday</div>
         </div>
       </div>
 

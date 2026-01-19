@@ -72,6 +72,7 @@ model Guest {
   rsvpStatus          RsvpStatus        @default(PENDING)
   plusOne             Boolean           @default(false)
   plusOneName         String?
+  attendanceDay       AttendanceDay?
   dietaryRestrictions String?
   notes               String?
   invitationToken     String            @unique @default(cuid())
@@ -96,4 +97,11 @@ enum RsvpStatus {
   ATTENDING
   NOT_ATTENDING
   MAYBE
+}
+
+enum AttendanceDay {
+  FRIDAY
+  SATURDAY
+  BOTH
+  NOT_SLEEPING_OVER
 }

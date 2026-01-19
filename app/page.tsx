@@ -2,6 +2,7 @@ import { Navigation } from "@/components/navigation"
 import { Hero } from "@/components/hero"
 import { OurStory } from "@/components/our-story"
 import { PhotoSection } from "@/components/photo-section"
+import { ImageSlideshow } from "@/components/image-slideshow"
 import { ScheduleSection } from "@/components/schedule-section"
 import { WeddingPartySection } from "@/components/wedding-party-section"
 import { RegistrySection } from "@/components/registry-section"
@@ -38,6 +39,11 @@ export default function Home() {
       {/* Photo Section */}
       <WeddingBackground variant="default" textureOpacity={0.4}>
         <PhotoSection />
+      </WeddingBackground>
+
+      {/* Image Slideshow Gallery */}
+      <WeddingBackground variant="cream" textureOpacity={0.5}>
+        <ImageSlideshow />
       </WeddingBackground>
 
       {/* Schedule with peach gradient */}

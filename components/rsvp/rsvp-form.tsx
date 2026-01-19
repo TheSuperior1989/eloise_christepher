@@ -1,14 +1,15 @@
 "use client"
 
 import { useState } from "react"
-import { Guest, RsvpStatus } from "@prisma/client"
+import { Guest, RsvpStatus, AttendanceDay } from "@prisma/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Textarea } from "@/components/ui/textarea"
 import { submitRsvp } from "@/app/rsvp/actions"
 import { toast } from "sonner"
-import { Check, X, HelpCircle } from "lucide-react"
+import { Check, X, HelpCircle, Calendar } from "lucide-react"
 
 interface RsvpFormProps {
   guest: Guest
@@ -21,12 +22,23 @@ export function RsvpForm({ guest }: RsvpFormProps) {
     guest.rsvpStatus || "PENDING"
   )
   const [plusOneName, setPlusOneName] = useState(guest.plusOneName || "")
+  const [attendanceDay, setAttendanceDay] = useState<AttendanceDay | undefined>(
+    guest.attendanceDay || undefined
+  )
+  const [dietaryRestrictions, setDietaryRestrictions] = useState(
+    guest.dietaryRestrictions || ""
+  )
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (rsvpStatus === "PENDING") {
       toast.error("Please select your attendance status")
+      return
+    }
+
+    if (rsvpStatus === "ATTENDING" && !attendanceDay) {
+      toast.error("Please select which day(s) you will be attending")
       return
     }
 
@@ -37,6 +49,8 @@ export function RsvpForm({ guest }: RsvpFormProps) {
         guestId: guest.id,
         rsvpStatus,
         plusOneName: guest.plusOne ? plusOneName : undefined,
+        attendanceDay: rsvpStatus === "ATTENDING" ? attendanceDay : undefined,
+        dietaryRestrictions: rsvpStatus === "ATTENDING" && dietaryRestrictions ? dietaryRestrictions : undefined,
       })
 
       setSubmitted(true)
@@ -79,9 +93,23 @@ export function RsvpForm({ guest }: RsvpFormProps) {
             {rsvpStatus === "NOT_ATTENDING" && "Regretfully Declining"}
             {rsvpStatus === "MAYBE" && "Tentatively Accepting"}
           </p>
+          {rsvpStatus === "ATTENDING" && attendanceDay && (
+            <p className="text-sm text-[#7A6F5D] mt-4">
+              <strong>Attending:</strong>{" "}
+              {attendanceDay === "FRIDAY" && "Friday Only"}
+              {attendanceDay === "SATURDAY" && "Saturday Only"}
+              {attendanceDay === "BOTH" && "Both Friday & Saturday"}
+              {attendanceDay === "NOT_SLEEPING_OVER" && "Not Sleeping Over (Ceremony Only)"}
+            </p>
+          )}
           {guest.plusOne && plusOneName && (
             <p className="text-sm text-[#7A6F5D] mt-4">
               <strong>Plus One:</strong> {plusOneName}
+            </p>
+          )}
+          {rsvpStatus === "ATTENDING" && dietaryRestrictions && (
+            <p className="text-sm text-[#7A6F5D] mt-4">
+              <strong>Dietary Requirements:</strong> {dietaryRestrictions}
             </p>
           )}
         </div>
@@ -130,6 +158,66 @@ export function RsvpForm({ guest }: RsvpFormProps) {
         </RadioGroup>
       </div>
 
+      {/* Attendance Day Selection */}
+      {rsvpStatus === "ATTENDING" && (
+        <div className="space-y-4">
+          <Label className="text-lg font-medium text-[#3D3630]">
+            Which day(s) will you be joining us? *
+          </Label>
+          <p className="text-sm text-[#7A6F5D] -mt-2">
+            This helps us plan catering and accommodations
+          </p>
+          <RadioGroup
+            value={attendanceDay || ""}
+            onValueChange={(value) => setAttendanceDay(value as AttendanceDay)}
+          >
+            <div className="flex items-center space-x-3 p-4 border-2 border-[#E8E3DB] rounded-lg hover:border-[#C4A57B] transition-colors cursor-pointer">
+              <RadioGroupItem value="FRIDAY" id="friday" />
+              <Label
+                htmlFor="friday"
+                className="flex items-center gap-2 cursor-pointer flex-1"
+              >
+                <Calendar className="w-5 h-5 text-[#C4A57B]" />
+                <span className="text-base">Friday Only</span>
+              </Label>
+            </div>
+            <div className="flex items-center space-x-3 p-4 border-2 border-[#E8E3DB] rounded-lg hover:border-[#C4A57B] transition-colors cursor-pointer">
+              <RadioGroupItem value="SATURDAY" id="saturday" />
+              <Label
+                htmlFor="saturday"
+                className="flex items-center gap-2 cursor-pointer flex-1"
+              >
+                <Calendar className="w-5 h-5 text-[#C4A57B]" />
+                <span className="text-base">Saturday Only</span>
+              </Label>
+            </div>
+            <div className="flex items-center space-x-3 p-4 border-2 border-[#E8E3DB] rounded-lg hover:border-[#C4A57B] transition-colors cursor-pointer">
+              <RadioGroupItem value="BOTH" id="both" />
+              <Label
+                htmlFor="both"
+                className="flex items-center gap-2 cursor-pointer flex-1"
+              >
+                <Calendar className="w-5 h-5 text-[#C4A57B]" />
+                <span className="text-base">Both Friday & Saturday</span>
+              </Label>
+            </div>
+            <div className="flex items-center space-x-3 p-4 border-2 border-[#E8E3DB] rounded-lg hover:border-[#C4A57B] transition-colors cursor-pointer">
+              <RadioGroupItem value="NOT_SLEEPING_OVER" id="not-sleeping" />
+              <Label
+                htmlFor="not-sleeping"
+                className="flex items-center gap-2 cursor-pointer flex-1"
+              >
+                <Calendar className="w-5 h-5 text-[#C4A57B]" />
+                <div className="flex-1">
+                  <span className="text-base block">Not Sleeping Over</span>
+                  <span className="text-xs text-[#7A6F5D]">Attending ceremony only, not staying overnight</span>
+                </div>
+              </Label>
+            </div>
+          </RadioGroup>
+        </div>
+      )}
+
       {/* Plus One */}
       {guest.plusOne && rsvpStatus === "ATTENDING" && (
         <div className="space-y-2">
@@ -142,6 +230,26 @@ export function RsvpForm({ guest }: RsvpFormProps) {
             onChange={(e) => setPlusOneName(e.target.value)}
             placeholder="Enter your guest's name"
             disabled={loading}
+          />
+        </div>
+      )}
+
+      {/* Dietary Restrictions */}
+      {rsvpStatus === "ATTENDING" && (
+        <div className="space-y-2">
+          <Label htmlFor="dietaryRestrictions" className="text-base font-medium text-[#3D3630]">
+            Dietary Restrictions or Special Food Requirements
+          </Label>
+          <p className="text-sm text-[#7A6F5D] -mt-1">
+            Please let us know about any allergies, dietary preferences, or special requirements
+          </p>
+          <Textarea
+            id="dietaryRestrictions"
+            value={dietaryRestrictions}
+            onChange={(e) => setDietaryRestrictions(e.target.value)}
+            placeholder="E.g., vegetarian, vegan, gluten-free, nut allergy, halal, kosher..."
+            disabled={loading}
+            rows={3}
           />
         </div>
       )}
