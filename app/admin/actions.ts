@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 import { auth } from "@/auth"
-import { InvitationStatus, RsvpStatus } from "@prisma/client"
+import { InvitationStatus, RsvpStatus, AttendanceDay } from "@prisma/client"
 import crypto from "crypto"
 import { Resend } from "resend"
 import WeddingInvitationEmail from "@/emails/wedding-invitation"
