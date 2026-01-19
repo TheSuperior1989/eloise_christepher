@@ -238,15 +238,26 @@ export function AttendanceBreakdownDialog({
               )}
 
               {/* Relation */}
-              <div className="flex items-start gap-3">
-                <div className="w-5 h-5 flex items-center justify-center mt-0.5">
-                  <span className="text-[#C4A57B]">💑</span>
+              {(selectedGuest.relationToBride || selectedGuest.relationToGroom) && (
+                <div className="flex items-start gap-3">
+                  <div className="w-5 h-5 flex items-center justify-center mt-0.5">
+                    <span className="text-[#C4A57B]">💑</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-[#7A6F5D] font-medium">Relation</p>
+                    {selectedGuest.relationToBride && (
+                      <p className="text-base text-[#3D3630]">
+                        <span className="font-medium">To Bride:</span> {selectedGuest.relationToBride}
+                      </p>
+                    )}
+                    {selectedGuest.relationToGroom && (
+                      <p className="text-base text-[#3D3630]">
+                        <span className="font-medium">To Groom:</span> {selectedGuest.relationToGroom}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-[#7A6F5D] font-medium">Relation</p>
-                  <p className="text-base text-[#3D3630] capitalize">{selectedGuest.relation}</p>
-                </div>
-              </div>
+              )}
             </div>
           )}
 
