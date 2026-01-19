@@ -38,20 +38,44 @@ export async function createGuest(data: {
   plusOne?: boolean
   notes?: string
 }) {
-  const session = await auth()
-  if (!session) {
-    throw new Error("Unauthorized")
+  try {
+    const session = await auth()
+    if (!session) {
+      throw new Error("Unauthorized - Please log in again")
+    }
+
+    const guest = await prisma.guest.create({
+      data: {
+        ...data,
+        invitationToken: crypto.randomBytes(32).toString("hex"),
+      },
+    })
+
+    revalidatePath("/admin/dashboard")
+    return guest
+  } catch (error: any) {
+    console.error("Error in createGuest:", error)
+
+    // Handle Prisma unique constraint violations
+    if (error.code === "P2002") {
+      const field = error.meta?.target?.[0] || "field"
+      if (field === "email") {
+        throw new Error("This email address is already assigned to another guest. Please use a different email.")
+      }
+      if (field === "phone") {
+        throw new Error("This phone number is already assigned to another guest. Please use a different phone number.")
+      }
+      throw new Error(`A guest with this ${field} already exists. Please use a different value.`)
+    }
+
+    // Handle other Prisma errors
+    if (error.code?.startsWith("P")) {
+      throw new Error(`Database error: Unable to create guest. Please try again.`)
+    }
+
+    // Re-throw with a user-friendly message
+    throw new Error(error.message || "Failed to create guest. Please try again.")
   }
-
-  const guest = await prisma.guest.create({
-    data: {
-      ...data,
-      invitationToken: crypto.randomBytes(32).toString("hex"),
-    },
-  })
-
-  revalidatePath("/admin/dashboard")
-  return guest
 }
 
 export async function updateGuest(
@@ -74,7 +98,7 @@ export async function updateGuest(
   try {
     const session = await auth()
     if (!session) {
-      throw new Error("Unauthorized")
+      throw new Error("Unauthorized - Please log in again")
     }
 
     console.log("Updating guest:", id, "with data:", data)
@@ -88,23 +112,69 @@ export async function updateGuest(
 
     revalidatePath("/admin/dashboard")
     return guest
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error in updateGuest:", error)
-    throw error
+
+    // Handle Prisma unique constraint violations
+    if (error.code === "P2002") {
+      const field = error.meta?.target?.[0] || "field"
+      if (field === "email") {
+        throw new Error("This email address is already assigned to another guest. Please use a different email.")
+      }
+      if (field === "phone") {
+        throw new Error("This phone number is already assigned to another guest. Please use a different phone number.")
+      }
+      throw new Error(`A guest with this ${field} already exists. Please use a different value.`)
+    }
+
+    // Handle record not found
+    if (error.code === "P2025") {
+      throw new Error("Guest not found. They may have been deleted.")
+    }
+
+    // Handle other Prisma errors
+    if (error.code?.startsWith("P")) {
+      throw new Error(`Database error: Unable to update guest. Please try again.`)
+    }
+
+    // Re-throw with a user-friendly message
+    throw new Error(error.message || "Failed to update guest. Please try again.")
   }
 }
 
 export async function deleteGuest(id: string) {
-  const session = await auth()
-  if (!session) {
-    throw new Error("Unauthorized")
+  try {
+    const session = await auth()
+    if (!session) {
+      throw new Error("Unauthorized - Please log in again")
+    }
+
+    await prisma.guest.delete({
+      where: { id },
+    })
+
+    revalidatePath("/admin/dashboard")
+  } catch (error: any) {
+    console.error("Error in deleteGuest:", error)
+
+    // Handle record not found
+    if (error.code === "P2025") {
+      throw new Error("Guest not found. They may have already been deleted.")
+    }
+
+    // Handle foreign key constraint violations
+    if (error.code === "P2003") {
+      throw new Error("Cannot delete guest because they have related records. Please contact support.")
+    }
+
+    // Handle other Prisma errors
+    if (error.code?.startsWith("P")) {
+      throw new Error(`Database error: Unable to delete guest. Please try again.`)
+    }
+
+    // Re-throw with a user-friendly message
+    throw new Error(error.message || "Failed to delete guest. Please try again.")
   }
-
-  await prisma.guest.delete({
-    where: { id },
-  })
-
-  revalidatePath("/admin/dashboard")
 }
 
 export async function sendInvitation(guestId: string) {
