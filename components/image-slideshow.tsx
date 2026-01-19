@@ -80,7 +80,7 @@ export function ImageSlideshow() {
           className="font-serif text-4xl md:text-5xl text-foreground text-center mb-4"
           style={{ fontFamily: "Playfair Display, serif" }}
         >
-          Our Journey
+          Our Gallery
         </h2>
         <div className="w-24 h-px bg-accent mx-auto mb-12" />
 

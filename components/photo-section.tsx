@@ -25,7 +25,7 @@ export function PhotoSection() {
                 <div className="bg-[#C4A57B]/10 p-3 rounded-lg border border-[#C4A57B]/20">
                   <p className="font-semibold text-[#3D3630] mb-1">⏰ Important Information</p>
                   <p className="mb-1">All guests must arrive at the lodge on <span className="font-semibold text-[#C4A57B]">Saturday, April 4th</span> by <span className="font-semibold text-[#C4A57B]">15:00 (3:00 PM)</span> for the ceremony</p>
-                  <p className="mb-1">Guests staying overnight can check in from <span className="font-semibold text-[#C4A57B]">10:00 AM</span></p>
+                  <p className="mb-1">Check-in times: <span className="font-semibold text-[#C4A57B]">Friday 14:00 (2:00 PM)</span> • <span className="font-semibold text-[#C4A57B]">Saturday 10:00 AM</span></p>
                   <p>Cost: <span className="font-semibold text-[#C4A57B]">R1,135 per person per night</span> (breakfast included)</p>
                 </div>
                 <p className="mb-2">

@@ -3,13 +3,13 @@ import Image from "next/image"
 export function WeddingPartySection() {
   const bridalParty = [
     {
-      name: "Cherise",
+      name: "Cherize",
       role: "Maid of Honor",
       image: "/assets/wedding-party/cherize-van-stade.jpeg",
       description: "The human version of 'we'll figure it out.' She didn't just witness our love story; she helped build it, laughed through it, and stood by us every step of the way."
     },
     {
-      name: "Annieke",
+      name: "Anieke",
       role: "Bridesmaid",
       image: "/assets/wedding-party/anieke-kelly.jpeg",
       description: "The friend who can turn a stressful moment into a full-on dance party and the reason Instagram notifications is permanently muted."

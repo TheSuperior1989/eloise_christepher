@@ -1,4 +1,9 @@
-import { Calendar, MapPin } from "lucide-react"
+"use client"
+
+import { Calendar, MapPin, Download } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import jsPDF from "jspdf"
+import autoTable from "jspdf-autotable"
 
 interface Event {
   time: string
@@ -69,21 +74,21 @@ export function ScheduleSection() {
           location: "Kwalata Game Lodge in Dinokeng Game Reserve, South Africa",
         },
         {
-          time: "2:20 PM - 2:40 PM",
+          time: "3:30 PM - 3:45 PM",
           title: "Travel to Ceremony Area",
           description: "Game drivers will be transporting guests from the venue to the ceremony area.",
           attire: "Semi Formal",
           location: "Kwalata Game Lodge in Dinokeng Game Reserve, South Africa",
         },
         {
-          time: "3:00 PM - 4:00 PM",
+          time: "4:00 PM - 4:30 PM",
           title: "Ceremony",
           description: 'We say our "I do\'s" in an unplugged ceremony',
           attire: "Semi Formal",
           location: "Kwalata Game Lodge in Dinokeng Game Reserve, South Africa",
         },
         {
-          time: "4:30 PM",
+          time: "4:45 PM",
           title: "Travel to Cocktail Hour",
           description: "Guests are transported back to the main lodge.",
           attire: "Semi Formal",
@@ -128,10 +133,104 @@ export function ScheduleSection() {
     },
   ]
 
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF()
+
+    // Add title
+    doc.setFontSize(24)
+    doc.setFont("helvetica", "bold")
+    doc.text("Wedding Schedule", 105, 20, { align: "center" })
+
+    doc.setFontSize(14)
+    doc.setFont("helvetica", "normal")
+    doc.text("Eloise & Christepher", 105, 30, { align: "center" })
+
+    let yPosition = 45
+
+    schedule.forEach((day, dayIndex) => {
+      // Add day header
+      if (dayIndex > 0) {
+        yPosition += 10
+      }
+
+      doc.setFontSize(16)
+      doc.setFont("helvetica", "bold")
+      doc.setTextColor(196, 165, 123) // Gold color
+      doc.text(`${day.day} - ${day.date}`, 20, yPosition)
+      yPosition += 8
+
+      // Create table data for this day
+      const tableData = day.events.map(event => [
+        event.time,
+        event.title,
+        event.description,
+        event.attire,
+      ])
+
+      // Add table
+      autoTable(doc, {
+        startY: yPosition,
+        head: [["Time", "Event", "Description", "Attire"]],
+        body: tableData,
+        theme: "striped",
+        headStyles: {
+          fillColor: [196, 165, 123], // Gold color
+          textColor: [255, 255, 255],
+          fontStyle: "bold",
+        },
+        styles: {
+          fontSize: 9,
+          cellPadding: 3,
+        },
+        columnStyles: {
+          0: { cellWidth: 30 },
+          1: { cellWidth: 40 },
+          2: { cellWidth: 80 },
+          3: { cellWidth: 30 },
+        },
+        margin: { left: 20, right: 20 },
+      })
+
+      yPosition = (doc as any).lastAutoTable.finalY + 5
+
+      // Add page break if needed
+      if (yPosition > 250 && dayIndex < schedule.length - 1) {
+        doc.addPage()
+        yPosition = 20
+      }
+    })
+
+    // Add footer
+    const pageCount = (doc as any).internal.getNumberOfPages()
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i)
+      doc.setFontSize(8)
+      doc.setTextColor(122, 111, 93)
+      doc.text(
+        "Kwalata Game Lodge, Dinokeng Game Reserve, South Africa",
+        105,
+        285,
+        { align: "center" }
+      )
+    }
+
+    doc.save("Wedding-Schedule-Eloise-Christepher.pdf")
+  }
+
   return (
     <section id="schedule" className="py-20 px-4">
       <div className="max-w-4xl mx-auto">
-        <h2 className="font-serif text-4xl md:text-5xl text-foreground text-center mb-4" style={{ fontFamily: "Playfair Display, serif" }}>Weekend Schedule</h2>
+        <div className="flex flex-col items-center mb-4">
+          <h2 className="font-serif text-4xl md:text-5xl text-foreground text-center mb-4" style={{ fontFamily: "Playfair Display, serif" }}>Weekend Schedule</h2>
+          <Button
+            onClick={handleDownloadPDF}
+            variant="outline"
+            className="gap-2 border-[#C4A57B] text-[#C4A57B] hover:bg-[#C4A57B] hover:text-white"
+          >
+            <Download className="h-4 w-4" />
+            Download Schedule PDF
+          </Button>
+        </div>
         <div className="w-24 h-px bg-accent mx-auto mb-16" />
 
         <div className="space-y-16">
