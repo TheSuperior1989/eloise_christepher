@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { Guest } from "@prisma/client"
 import {
   Dialog,
@@ -8,8 +9,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Calendar, Moon, Sun } from "lucide-react"
+import { Calendar, Moon, Sun, Mail, Phone, User } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 interface AttendanceBreakdownDialogProps {
   open: boolean
@@ -22,6 +31,8 @@ export function AttendanceBreakdownDialog({
   onOpenChange,
   guests,
 }: AttendanceBreakdownDialogProps) {
+  const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null)
+
   // Filter guests by attendance day
   const fridayGuests = guests.filter(
     (g) => g.rsvpStatus === "ATTENDING" && (g.attendanceDay === "FRIDAY" || g.attendanceDay === "BOTH")
@@ -34,118 +45,222 @@ export function AttendanceBreakdownDialog({
   )
 
   const GuestCard = ({ guest }: { guest: Guest }) => (
-    <div className="p-3 bg-white rounded-lg border border-[#E8E3DB] hover:border-[#C4A57B] transition-colors">
+    <button
+      onClick={() => setSelectedGuest(guest)}
+      className="w-full p-3 bg-white rounded-lg border border-[#E8E3DB] hover:border-[#C4A57B] hover:bg-[#FAF8F5] transition-all text-left"
+    >
       <p className="font-medium text-[#3D3630]">
         {guest.firstName} {guest.lastName}
       </p>
-      {guest.email && (
-        <p className="text-xs text-[#7A6F5D] mt-1">{guest.email}</p>
-      )}
-      {guest.plusOne && (
-        <p className="text-xs text-[#C4A57B] mt-1">+ Plus One</p>
-      )}
-    </div>
+    </button>
   )
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-6xl max-h-[90vh]">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-serif text-[#3D3630]">
-            Attendance Breakdown
-          </DialogTitle>
-          <DialogDescription>
-            Detailed view of guests by their attendance schedule
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-[95vw] w-full max-h-[95vh] h-[95vh]">
+          <DialogHeader>
+            <DialogTitle className="text-3xl font-serif text-[#3D3630]">
+              Attendance Breakdown
+            </DialogTitle>
+            <DialogDescription className="text-base">
+              Click on any guest name to view their full details
+            </DialogDescription>
+          </DialogHeader>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
-          {/* Friday Night */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 pb-3 border-b-2 border-[#C4A57B]">
-              <Moon className="w-5 h-5 text-[#C4A57B]" />
-              <div>
-                <h3 className="font-serif font-semibold text-[#3D3630]">
-                  Friday Night
-                </h3>
-                <p className="text-sm text-[#7A6F5D]">
-                  {fridayGuests.length} guest{fridayGuests.length !== 1 ? "s" : ""}
-                </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-6 flex-1 overflow-hidden">
+            {/* Friday Night */}
+            <div className="flex flex-col h-full">
+              <div className="flex items-center gap-3 pb-4 border-b-2 border-[#C4A57B]">
+                <Moon className="w-6 h-6 text-[#C4A57B]" />
+                <div>
+                  <h3 className="font-serif font-semibold text-[#3D3630] text-xl">
+                    Friday Night
+                  </h3>
+                  <p className="text-sm text-[#7A6F5D]">
+                    {fridayGuests.length} guest{fridayGuests.length !== 1 ? "s" : ""}
+                  </p>
+                </div>
+              </div>
+              <ScrollArea className="flex-1 mt-4 pr-4">
+                <div className="space-y-2">
+                  {fridayGuests.length === 0 ? (
+                    <p className="text-sm text-[#7A6F5D] italic text-center py-12">
+                      No guests sleeping over Friday
+                    </p>
+                  ) : (
+                    fridayGuests.map((guest) => (
+                      <GuestCard key={guest.id} guest={guest} />
+                    ))
+                  )}
+                </div>
+              </ScrollArea>
+            </div>
+
+            {/* Saturday Night */}
+            <div className="flex flex-col h-full">
+              <div className="flex items-center gap-3 pb-4 border-b-2 border-[#C4A57B]">
+                <Moon className="w-6 h-6 text-[#C4A57B]" />
+                <div>
+                  <h3 className="font-serif font-semibold text-[#3D3630] text-xl">
+                    Saturday Night
+                  </h3>
+                  <p className="text-sm text-[#7A6F5D]">
+                    {saturdayGuests.length} guest{saturdayGuests.length !== 1 ? "s" : ""}
+                  </p>
+                </div>
+              </div>
+              <ScrollArea className="flex-1 mt-4 pr-4">
+                <div className="space-y-2">
+                  {saturdayGuests.length === 0 ? (
+                    <p className="text-sm text-[#7A6F5D] italic text-center py-12">
+                      No guests sleeping over Saturday
+                    </p>
+                  ) : (
+                    saturdayGuests.map((guest) => (
+                      <GuestCard key={guest.id} guest={guest} />
+                    ))
+                  )}
+                </div>
+              </ScrollArea>
+            </div>
+
+            {/* Not Sleeping Over */}
+            <div className="flex flex-col h-full">
+              <div className="flex items-center gap-3 pb-4 border-b-2 border-[#C4A57B]">
+                <Sun className="w-6 h-6 text-[#C4A57B]" />
+                <div>
+                  <h3 className="font-serif font-semibold text-[#3D3630] text-xl">
+                    Not Sleeping Over
+                  </h3>
+                  <p className="text-sm text-[#7A6F5D]">
+                    {notSleepingOverGuests.length} guest{notSleepingOverGuests.length !== 1 ? "s" : ""}
+                  </p>
+                </div>
+              </div>
+              <ScrollArea className="flex-1 mt-4 pr-4">
+                <div className="space-y-2">
+                  {notSleepingOverGuests.length === 0 ? (
+                    <p className="text-sm text-[#7A6F5D] italic text-center py-12">
+                      No ceremony-only guests
+                    </p>
+                  ) : (
+                    notSleepingOverGuests.map((guest) => (
+                      <GuestCard key={guest.id} guest={guest} />
+                    ))
+                  )}
+                </div>
+              </ScrollArea>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Guest Details Overlay Dialog */}
+      <AlertDialog open={!!selectedGuest} onOpenChange={() => setSelectedGuest(null)}>
+        <AlertDialogContent className="max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-2xl font-serif text-[#3D3630]">
+              Guest Details
+            </AlertDialogTitle>
+            <AlertDialogDescription className="sr-only">
+              Detailed information about the selected guest
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          {selectedGuest && (
+            <div className="space-y-4 py-4">
+              {/* Name */}
+              <div className="flex items-start gap-3">
+                <User className="w-5 h-5 text-[#C4A57B] mt-0.5" />
+                <div>
+                  <p className="text-sm text-[#7A6F5D] font-medium">Full Name</p>
+                  <p className="text-base text-[#3D3630] font-semibold">
+                    {selectedGuest.firstName} {selectedGuest.lastName}
+                  </p>
+                </div>
+              </div>
+
+              {/* Email */}
+              {selectedGuest.email && (
+                <div className="flex items-start gap-3">
+                  <Mail className="w-5 h-5 text-[#C4A57B] mt-0.5" />
+                  <div>
+                    <p className="text-sm text-[#7A6F5D] font-medium">Email</p>
+                    <p className="text-base text-[#3D3630]">{selectedGuest.email}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Phone */}
+              {selectedGuest.phone && (
+                <div className="flex items-start gap-3">
+                  <Phone className="w-5 h-5 text-[#C4A57B] mt-0.5" />
+                  <div>
+                    <p className="text-sm text-[#7A6F5D] font-medium">Phone</p>
+                    <p className="text-base text-[#3D3630]">{selectedGuest.phone}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Attendance Day */}
+              <div className="flex items-start gap-3">
+                <Calendar className="w-5 h-5 text-[#C4A57B] mt-0.5" />
+                <div>
+                  <p className="text-sm text-[#7A6F5D] font-medium">Attendance</p>
+                  <p className="text-base text-[#3D3630]">
+                    {selectedGuest.attendanceDay === "FRIDAY" && "Friday Night"}
+                    {selectedGuest.attendanceDay === "SATURDAY" && "Saturday Night"}
+                    {selectedGuest.attendanceDay === "BOTH" && "Both Friday & Saturday"}
+                    {selectedGuest.attendanceDay === "NOT_SLEEPING_OVER" && "Not Sleeping Over (Ceremony Only)"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Plus One */}
+              {selectedGuest.plusOne && (
+                <div className="p-3 bg-[#FAF8F5] rounded-lg border border-[#C4A57B]/30">
+                  <p className="text-sm text-[#C4A57B] font-semibold">+ Plus One Allowed</p>
+                </div>
+              )}
+
+              {/* Dietary Restrictions */}
+              {selectedGuest.dietaryRestrictions && (
+                <div className="flex items-start gap-3">
+                  <div className="w-5 h-5 flex items-center justify-center mt-0.5">
+                    <span className="text-[#C4A57B]">🍽️</span>
+                  </div>
+                  <div>
+                    <p className="text-sm text-[#7A6F5D] font-medium">Dietary Restrictions</p>
+                    <p className="text-base text-[#3D3630]">{selectedGuest.dietaryRestrictions}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Relation */}
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 flex items-center justify-center mt-0.5">
+                  <span className="text-[#C4A57B]">💑</span>
+                </div>
+                <div>
+                  <p className="text-sm text-[#7A6F5D] font-medium">Relation</p>
+                  <p className="text-base text-[#3D3630] capitalize">{selectedGuest.relation}</p>
+                </div>
               </div>
             </div>
-            <ScrollArea className="h-[400px] pr-4">
-              <div className="space-y-2">
-                {fridayGuests.length === 0 ? (
-                  <p className="text-sm text-[#7A6F5D] italic text-center py-8">
-                    No guests sleeping over Friday
-                  </p>
-                ) : (
-                  fridayGuests.map((guest) => (
-                    <GuestCard key={guest.id} guest={guest} />
-                  ))
-                )}
-              </div>
-            </ScrollArea>
-          </div>
+          )}
 
-          {/* Saturday Night */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 pb-3 border-b-2 border-[#C4A57B]">
-              <Moon className="w-5 h-5 text-[#C4A57B]" />
-              <div>
-                <h3 className="font-serif font-semibold text-[#3D3630]">
-                  Saturday Night
-                </h3>
-                <p className="text-sm text-[#7A6F5D]">
-                  {saturdayGuests.length} guest{saturdayGuests.length !== 1 ? "s" : ""}
-                </p>
-              </div>
-            </div>
-            <ScrollArea className="h-[400px] pr-4">
-              <div className="space-y-2">
-                {saturdayGuests.length === 0 ? (
-                  <p className="text-sm text-[#7A6F5D] italic text-center py-8">
-                    No guests sleeping over Saturday
-                  </p>
-                ) : (
-                  saturdayGuests.map((guest) => (
-                    <GuestCard key={guest.id} guest={guest} />
-                  ))
-                )}
-              </div>
-            </ScrollArea>
+          <div className="flex justify-end">
+            <Button
+              onClick={() => setSelectedGuest(null)}
+              className="bg-[#3D3630] hover:bg-[#2D2620]"
+            >
+              Close
+            </Button>
           </div>
-
-          {/* Not Sleeping Over */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 pb-3 border-b-2 border-[#C4A57B]">
-              <Sun className="w-5 h-5 text-[#C4A57B]" />
-              <div>
-                <h3 className="font-serif font-semibold text-[#3D3630]">
-                  Not Sleeping Over
-                </h3>
-                <p className="text-sm text-[#7A6F5D]">
-                  {notSleepingOverGuests.length} guest{notSleepingOverGuests.length !== 1 ? "s" : ""}
-                </p>
-              </div>
-            </div>
-            <ScrollArea className="h-[400px] pr-4">
-              <div className="space-y-2">
-                {notSleepingOverGuests.length === 0 ? (
-                  <p className="text-sm text-[#7A6F5D] italic text-center py-8">
-                    No ceremony-only guests
-                  </p>
-                ) : (
-                  notSleepingOverGuests.map((guest) => (
-                    <GuestCard key={guest.id} guest={guest} />
-                  ))
-                )}
-              </div>
-            </ScrollArea>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   )
 }
 

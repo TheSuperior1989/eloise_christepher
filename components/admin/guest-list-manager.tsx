@@ -4,7 +4,8 @@ import { useState } from "react"
 import { Guest, InvitationStatus, RsvpStatus, AttendanceDay } from "@prisma/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Plus, LogOut, Search, Mail, RefreshCw, Filter, Download, X, Users } from "lucide-react"
+import { Plus, LogOut, Search, Mail, RefreshCw, Filter, Download, X, Users, Home } from "lucide-react"
+import Link from "next/link"
 import { signOut } from "next-auth/react"
 import { GuestTable } from "./guest-table"
 import { AddGuestDialog } from "./add-guest-dialog"
@@ -320,14 +321,25 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
             Welcome back, {session.user?.name}
           </p>
         </div>
-        <Button
-          variant="outline"
-          onClick={() => signOut({ callbackUrl: "/admin/login" })}
-          className="gap-2"
-        >
-          <LogOut className="h-4 w-4" />
-          Sign Out
-        </Button>
+        <div className="flex gap-3">
+          <Link href="/" target="_blank">
+            <Button
+              variant="outline"
+              className="gap-2"
+            >
+              <Home className="h-4 w-4" />
+              Back to Website
+            </Button>
+          </Link>
+          <Button
+            variant="outline"
+            onClick={() => signOut({ callbackUrl: "/admin/login" })}
+            className="gap-2"
+          >
+            <LogOut className="h-4 w-4" />
+            Sign Out
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}
