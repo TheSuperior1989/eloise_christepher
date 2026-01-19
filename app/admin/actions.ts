@@ -93,7 +93,7 @@ export async function updateGuest(
     notes?: string
     invitationStatus?: InvitationStatus
     rsvpStatus?: RsvpStatus
-    attendanceDay?: string
+    attendanceDay?: AttendanceDay | null
   }
 ) {
   try {

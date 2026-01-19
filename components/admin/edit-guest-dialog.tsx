@@ -68,7 +68,7 @@ export function EditGuestDialog({
         plusOneName: formData.plusOneName || undefined,
         dietaryRestrictions: formData.dietaryRestrictions || undefined,
         notes: formData.notes || undefined,
-        attendanceDay: formData.attendanceDay || undefined,
+        attendanceDay: formData.attendanceDay ? (formData.attendanceDay as AttendanceDay) : null,
       })
 
       onGuestUpdated(updatedGuest)
