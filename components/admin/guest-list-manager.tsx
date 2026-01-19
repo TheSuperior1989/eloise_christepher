@@ -4,10 +4,11 @@ import { useState } from "react"
 import { Guest, InvitationStatus, RsvpStatus, AttendanceDay } from "@prisma/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Plus, LogOut, Search, Mail, RefreshCw, Filter, Download, X } from "lucide-react"
+import { Plus, LogOut, Search, Mail, RefreshCw, Filter, Download, X, Users } from "lucide-react"
 import { signOut } from "next-auth/react"
 import { GuestTable } from "./guest-table"
 import { AddGuestDialog } from "./add-guest-dialog"
+import { AttendanceBreakdownDialog } from "./attendance-breakdown-dialog"
 import { Session } from "next-auth"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
@@ -37,6 +38,7 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
   const [attendanceDayFilter, setAttendanceDayFilter] = useState<AttendanceDay | "ALL" | "NONE">("ALL")
   const [isResettingRsvp, setIsResettingRsvp] = useState(false)
   const [isResettingAll, setIsResettingAll] = useState(false)
+  const [isAttendanceDialogOpen, setIsAttendanceDialogOpen] = useState(false)
 
   const handleRefresh = () => {
     setIsRefreshing(true)
@@ -303,6 +305,7 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
     pending: guests.filter((g) => g.rsvpStatus === "PENDING").length,
     attendingFriday: guests.filter((g) => g.rsvpStatus === "ATTENDING" && (g.attendanceDay === "FRIDAY" || g.attendanceDay === "BOTH")).length,
     attendingSaturday: guests.filter((g) => g.rsvpStatus === "ATTENDING" && (g.attendanceDay === "SATURDAY" || g.attendanceDay === "BOTH")).length,
+    notSleepingOver: guests.filter((g) => g.rsvpStatus === "ATTENDING" && g.attendanceDay === "NOT_SLEEPING_OVER").length,
   }
 
   return (
@@ -352,15 +355,40 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
       </div>
 
       {/* Attendance Day Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-[#E8E3DB]">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div
+          className="bg-white p-6 rounded-lg shadow-sm border border-[#E8E3DB] hover:border-[#C4A57B] transition-colors cursor-pointer"
+          onClick={() => setAttendanceDayFilter("FRIDAY")}
+        >
           <div className="text-2xl font-bold text-[#C4A57B]">{stats.attendingFriday}</div>
           <div className="text-sm text-[#7A6F5D]">Sleeping Over Friday Night (for catering)</div>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-[#E8E3DB]">
+        <div
+          className="bg-white p-6 rounded-lg shadow-sm border border-[#E8E3DB] hover:border-[#C4A57B] transition-colors cursor-pointer"
+          onClick={() => setAttendanceDayFilter("SATURDAY")}
+        >
           <div className="text-2xl font-bold text-[#C4A57B]">{stats.attendingSaturday}</div>
           <div className="text-sm text-[#7A6F5D]">Sleeping Over Saturday Night</div>
         </div>
+        <div
+          className="bg-white p-6 rounded-lg shadow-sm border border-[#E8E3DB] hover:border-[#C4A57B] transition-colors cursor-pointer"
+          onClick={() => setAttendanceDayFilter("NOT_SLEEPING_OVER")}
+        >
+          <div className="text-2xl font-bold text-[#C4A57B]">{stats.notSleepingOver}</div>
+          <div className="text-sm text-[#7A6F5D]">Not Sleeping Over (Ceremony Only)</div>
+        </div>
+      </div>
+
+      {/* View Detailed Breakdown Button */}
+      <div className="mb-8">
+        <Button
+          onClick={() => setIsAttendanceDialogOpen(true)}
+          variant="outline"
+          className="gap-2"
+        >
+          <Users className="h-4 w-4" />
+          View Detailed Attendance Breakdown
+        </Button>
       </div>
 
       {/* Actions Bar */}
@@ -530,6 +558,13 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
           setGuests([newGuest, ...guests])
           setIsAddDialogOpen(false)
         }}
+      />
+
+      {/* Attendance Breakdown Dialog */}
+      <AttendanceBreakdownDialog
+        open={isAttendanceDialogOpen}
+        onOpenChange={setIsAttendanceDialogOpen}
+        guests={guests}
       />
     </div>
   )
