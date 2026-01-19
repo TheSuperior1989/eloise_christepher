@@ -290,10 +290,14 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
 
     const matchesInvitation = invitationFilter === "ALL" || guest.invitationStatus === invitationFilter
     const matchesRsvp = rsvpFilter === "ALL" || guest.rsvpStatus === rsvpFilter
+
+    // Match attendance day - FRIDAY and SATURDAY should also match BOTH
     const matchesAttendanceDay =
       attendanceDayFilter === "ALL" ||
       (attendanceDayFilter === "NONE" && !guest.attendanceDay) ||
-      guest.attendanceDay === attendanceDayFilter
+      guest.attendanceDay === attendanceDayFilter ||
+      (attendanceDayFilter === "FRIDAY" && guest.attendanceDay === "BOTH") ||
+      (attendanceDayFilter === "SATURDAY" && guest.attendanceDay === "BOTH")
 
     return matchesSearch && matchesInvitation && matchesRsvp && matchesAttendanceDay
   })
