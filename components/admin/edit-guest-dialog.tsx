@@ -208,9 +208,9 @@ export function EditGuestDialog({
           <div className="space-y-2">
             <Label htmlFor="attendanceDay">Attendance Day</Label>
             <Select
-              value={formData.attendanceDay}
+              value={formData.attendanceDay || "NONE"}
               onValueChange={(value) =>
-                setFormData({ ...formData, attendanceDay: value })
+                setFormData({ ...formData, attendanceDay: value === "NONE" ? "" : value })
               }
               disabled={loading}
             >
@@ -218,7 +218,7 @@ export function EditGuestDialog({
                 <SelectValue placeholder="Select attendance day" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">None</SelectItem>
+                <SelectItem value="NONE">None</SelectItem>
                 <SelectItem value="FRIDAY">Friday</SelectItem>
                 <SelectItem value="SATURDAY">Saturday</SelectItem>
                 <SelectItem value="BOTH">Both Days</SelectItem>
