@@ -120,6 +120,7 @@ export function RegistrySection() {
                   <p><span className="font-semibold text-foreground">Bank:</span> ABSA</p>
                   <p><span className="font-semibold text-foreground">Account Holder:</span> CW Von Stade</p>
                   <p><span className="font-semibold text-foreground">Account Number:</span> 4107055742</p>
+                  <p><span className="font-semibold text-foreground">Account Type:</span> Cheque Account</p>
                   <p><span className="font-semibold text-foreground">Branch Code:</span> 632005</p>
                   <p className="text-xs italic mt-3">Please use your name as reference</p>
                 </div>
