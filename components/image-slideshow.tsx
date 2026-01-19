@@ -23,6 +23,19 @@ export function ImageSlideshow() {
     setMounted(true)
   }, [])
 
+  // Lock body scroll when lightbox is open
+  useEffect(() => {
+    if (lightboxImage) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [lightboxImage])
+
   // Auto-advance carousel
   useEffect(() => {
     if (!api) return
@@ -128,13 +141,15 @@ export function ImageSlideshow() {
           className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
           onClick={() => setLightboxImage(null)}
         >
+          {/* Close Button - Top Right */}
           <Button
-            variant="ghost"
-            size="icon"
-            className="absolute top-4 right-4 text-white hover:bg-white/20 z-10"
+            variant="outline"
+            size="lg"
+            className="absolute top-4 right-4 bg-white text-[#3D3630] hover:bg-[#FAF8F5] hover:text-[#C4A57B] border-2 border-[#C4A57B] z-10 gap-2 font-medium shadow-lg"
             onClick={() => setLightboxImage(null)}
           >
-            <X className="h-6 w-6" />
+            <X className="h-5 w-5" />
+            Close
           </Button>
 
           <div
