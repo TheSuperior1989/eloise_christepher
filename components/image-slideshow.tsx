@@ -138,15 +138,18 @@ export function ImageSlideshow() {
       {/* Lightbox */}
       {lightboxImage && (
         <div
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
+          className="fixed inset-0 z-[100] bg-black/98 flex items-center justify-center p-4"
           onClick={() => setLightboxImage(null)}
         >
           {/* Close Button - Top Right */}
           <Button
             variant="outline"
             size="lg"
-            className="absolute top-4 right-4 bg-white text-[#3D3630] hover:bg-[#FAF8F5] hover:text-[#C4A57B] border-2 border-[#C4A57B] z-10 gap-2 font-medium shadow-lg"
-            onClick={() => setLightboxImage(null)}
+            className="fixed top-6 right-6 bg-white text-[#3D3630] hover:bg-[#FAF8F5] hover:text-[#C4A57B] border-2 border-[#C4A57B] z-[101] gap-2 font-medium shadow-2xl"
+            onClick={(e) => {
+              e.stopPropagation()
+              setLightboxImage(null)
+            }}
           >
             <X className="h-5 w-5" />
             Close
