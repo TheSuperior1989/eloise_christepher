@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Guest, InvitationStatus, RsvpStatus, AttendanceDay } from "@prisma/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Plus, LogOut, Search, Mail, RefreshCw, Filter, Download, X, Users, Home } from "lucide-react"
+import { Plus, LogOut, Search, Mail, RefreshCw, Filter, Download, X, Users, Home, Bell } from "lucide-react"
 import Link from "next/link"
 import { signOut } from "next-auth/react"
 import { GuestTable } from "./guest-table"
@@ -40,6 +40,7 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
   const [isResettingRsvp, setIsResettingRsvp] = useState(false)
   const [isResettingAll, setIsResettingAll] = useState(false)
   const [isAttendanceDialogOpen, setIsAttendanceDialogOpen] = useState(false)
+  const [isSendingReminders, setIsSendingReminders] = useState(false)
 
   const handleRefresh = () => {
     setIsRefreshing(true)
@@ -182,6 +183,55 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
     }
     if (failCount > 0) {
       toast.error(`Failed to send ${failCount} invitation(s)`)
+    }
+  }
+
+  const handleBulkSendReminders = async () => {
+    if (selectedGuests.length === 0) {
+      toast.error("Please select at least one guest")
+      return
+    }
+
+    // Filter to only guests who can receive reminders
+    const eligibleGuests = guests.filter(g =>
+      selectedGuests.includes(g.id) &&
+      g.invitationStatus === "SENT" &&
+      g.rsvpStatus === "PENDING"
+    )
+
+    if (eligibleGuests.length === 0) {
+      toast.error("No eligible guests selected. Reminders can only be sent to guests who have received invitations but haven't RSVPd yet.")
+      return
+    }
+
+    const confirmed = confirm(
+      `Are you sure you want to send RSVP reminders to ${eligibleGuests.length} guest(s)?`
+    )
+    if (!confirmed) return
+
+    setIsSendingReminders(true)
+    let successCount = 0
+    let failCount = 0
+
+    for (const guest of eligibleGuests) {
+      try {
+        const { sendRsvpReminder } = await import("@/app/admin/actions")
+        await sendRsvpReminder(guest.id)
+        successCount++
+      } catch (error) {
+        failCount++
+        console.error(`Failed to send reminder to guest ${guest.id}:`, error)
+      }
+    }
+
+    setIsSendingReminders(false)
+    setSelectedGuests([])
+
+    if (successCount > 0) {
+      toast.success(`Successfully sent ${successCount} reminder(s)`)
+    }
+    if (failCount > 0) {
+      toast.error(`Failed to send ${failCount} reminder(s)`)
     }
   }
 
@@ -507,6 +557,14 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
               >
                 <Mail className="h-4 w-4" />
                 {isSendingBulk ? "Sending..." : `Send Invitations (${selectedGuests.length})`}
+              </Button>
+              <Button
+                onClick={handleBulkSendReminders}
+                className="bg-[#C4A57B] hover:bg-[#B39568] text-white gap-2"
+                disabled={isSendingReminders}
+              >
+                <Bell className="h-4 w-4" />
+                {isSendingReminders ? "Sending..." : `Send Reminders (${selectedGuests.length})`}
               </Button>
               <Button
                 onClick={handleBulkResetRsvp}

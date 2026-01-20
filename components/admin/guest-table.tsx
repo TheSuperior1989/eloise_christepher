@@ -13,14 +13,14 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Mail, Edit, Trash2, MoreHorizontal } from "lucide-react"
+import { Mail, Edit, Trash2, MoreHorizontal, Bell } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { deleteGuest, sendInvitation } from "@/app/admin/actions"
+import { deleteGuest, sendInvitation, sendRsvpReminder } from "@/app/admin/actions"
 import { EditGuestDialog } from "./edit-guest-dialog"
 import { toast } from "sonner"
 
@@ -34,6 +34,7 @@ interface GuestTableProps {
 export function GuestTable({ guests, onGuestsChange, selectedGuests, onSelectionChange }: GuestTableProps) {
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null)
   const [sendingInvitation, setSendingInvitation] = useState<string | null>(null)
+  const [sendingReminder, setSendingReminder] = useState<string | null>(null)
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this guest?")) return
@@ -67,6 +68,33 @@ export function GuestTable({ guests, onGuestsChange, selectedGuests, onSelection
       toast.error("Failed to send invitation")
     } finally {
       setSendingInvitation(null)
+    }
+  }
+
+  const handleSendReminder = async (guest: Guest) => {
+    if (!guest.email) {
+      toast.error("Guest has no email address")
+      return
+    }
+
+    if (guest.invitationStatus !== "SENT") {
+      toast.error("Cannot send reminder - invitation has not been sent yet")
+      return
+    }
+
+    if (guest.rsvpStatus !== "PENDING") {
+      toast.error("Cannot send reminder - guest has already responded")
+      return
+    }
+
+    setSendingReminder(guest.id)
+    try {
+      await sendRsvpReminder(guest.id)
+      toast.success(`Reminder sent to ${guest.firstName} ${guest.lastName}`)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to send reminder")
+    } finally {
+      setSendingReminder(null)
     }
   }
 
@@ -188,6 +216,18 @@ export function GuestTable({ guests, onGuestsChange, selectedGuests, onSelection
                         >
                           <Mail className="h-4 w-4 mr-2" />
                           {sendingInvitation === guest.id ? "Sending..." : "Send Invitation"}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleSendReminder(guest)}
+                          disabled={
+                            !guest.email ||
+                            sendingReminder === guest.id ||
+                            guest.invitationStatus !== "SENT" ||
+                            guest.rsvpStatus !== "PENDING"
+                          }
+                        >
+                          <Bell className="h-4 w-4 mr-2" />
+                          {sendingReminder === guest.id ? "Sending..." : "Send RSVP Reminder"}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => handleDelete(guest.id)}

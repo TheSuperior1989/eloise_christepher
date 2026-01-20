@@ -7,6 +7,7 @@ import { InvitationStatus, RsvpStatus, AttendanceDay } from "@prisma/client"
 import crypto from "crypto"
 import { Resend } from "resend"
 import WeddingInvitationEmail from "@/emails/wedding-invitation"
+import RsvpReminderEmail from "@/emails/rsvp-reminder"
 
 // Lazy-load Resend client to avoid initialization during build
 function getResendClient() {
@@ -322,6 +323,90 @@ export async function bulkSendInvitations(guestIds: string[]) {
   for (const guestId of guestIds) {
     try {
       await sendInvitation(guestId)
+      results.push({ guestId, success: true })
+    } catch (error) {
+      results.push({ guestId, success: false, error: (error as Error).message })
+    }
+  }
+
+  revalidatePath("/admin/dashboard")
+  return results
+}
+
+// Send RSVP reminder to a single guest
+export async function sendRsvpReminder(guestId: string) {
+  const session = await auth()
+  if (!session) {
+    throw new Error("Unauthorized")
+  }
+
+  const guest = await prisma.guest.findUnique({
+    where: { id: guestId },
+  })
+
+  if (!guest || !guest.email) {
+    throw new Error("Guest not found or no email address")
+  }
+
+  // Only send reminder if invitation was sent and RSVP is still pending
+  if (guest.invitationStatus !== "SENT") {
+    throw new Error("Cannot send reminder - invitation has not been sent yet")
+  }
+
+  if (guest.rsvpStatus !== "PENDING") {
+    throw new Error("Cannot send reminder - guest has already responded")
+  }
+
+  // Generate URLs
+  const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000"
+  const invitationUrl = `${baseUrl}/invitation/${guest.invitationToken}`
+  const rsvpUrl = `${baseUrl}/rsvp/${guest.invitationToken}`
+
+  try {
+    console.log(`Sending RSVP reminder to ${guest.email} (${guest.firstName} ${guest.lastName})`)
+    console.log(`RSVP URL: ${rsvpUrl}`)
+
+    // Send reminder email using Resend
+    const resend = getResendClient()
+    const emailResult = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL!,
+      to: guest.email,
+      subject: "Friendly Reminder: Please RSVP for Eloise & Christepher's Wedding",
+      react: RsvpReminderEmail({
+        guestName: `${guest.firstName} ${guest.lastName}`,
+        rsvpUrl,
+        invitationUrl,
+      }),
+    })
+
+    console.log("Reminder email sent successfully:", emailResult)
+
+    revalidatePath("/admin/dashboard")
+    return { success: true, emailId: emailResult.data?.id }
+  } catch (error) {
+    console.error("Failed to send reminder:", error)
+    console.error("Error details:", {
+      guestId,
+      guestEmail: guest.email,
+      errorMessage: error instanceof Error ? error.message : "Unknown error",
+      errorStack: error instanceof Error ? error.stack : undefined,
+    })
+
+    throw error
+  }
+}
+
+// Send RSVP reminders to multiple guests
+export async function sendBulkRsvpReminders(guestIds: string[]) {
+  const session = await auth()
+  if (!session) {
+    throw new Error("Unauthorized")
+  }
+
+  const results = []
+  for (const guestId of guestIds) {
+    try {
+      await sendRsvpReminder(guestId)
       results.push({ guestId, success: true })
     } catch (error) {
       results.push({ guestId, success: false, error: (error as Error).message })
