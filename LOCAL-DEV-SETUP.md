@@ -23,7 +23,7 @@ You need to add your environment variables to Vercel so they can be pulled local
 2. Add these environment variables for **Development** environment:
 
 ```
-DATABASE_URL=postgresql://postgres.oygrnxxuwozruvcfxyui:WeddingDB2025%21Secure@db.oygrnxxuwozruvcfxyui.supabase.co:5432/postgres
+DATABASE_URL=postgresql://postgres.oygrnxxuwozruvcfxyui:[YOUR_DB_PASSWORD]@db.oygrnxxuwozruvcfxyui.supabase.co:5432/postgres
 
 NEXTAUTH_SECRET=your-super-secret-key-change-this-in-production-min-32-chars
 
@@ -80,7 +80,7 @@ If you don't want to set up local development, just use the production site:
 
 Credentials:
 - Email: `christiaanvonstade@gmail.com`
-- Password: `Bike2453`
+- Password: `[reset in app]`
 
 ## 📝 Why This Works
 

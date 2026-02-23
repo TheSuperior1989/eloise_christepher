@@ -14,17 +14,17 @@ All three accounts are set up and verified:
 
 1. **Christiaan**
    - Email: `christiaanvonstade@gmail.com`
-   - Password: `Bike2453`
+   - Password: `[see .env or reset in app]`
    - Role: ADMIN
 
 2. **Eloise**
    - Email: `eloisebissei@gmail.com`
-   - Password: `Bike2453`
+   - Password: `[see .env or reset in app]`
    - Role: ADMIN
 
 3. **Christepher**
    - Email: `christepher.vonstade@gmail.com`
-   - Password: `Bike2453`
+   - Password: `[see .env or reset in app]`
    - Role: ADMIN
 
 ## ❌ What's NOT Working
@@ -53,7 +53,7 @@ I've opened the page for you: https://vercel.com/tiaans-projects-de125fa2/eloise
 Add these variables for **Development** environment:
 
 ```
-DATABASE_URL=postgresql://postgres.oygrnxxuwozruvcfxyui:WeddingDB2025%21Secure@db.oygrnxxuwozruvcfxyui.supabase.co:5432/postgres
+DATABASE_URL=postgresql://postgres.oygrnxxuwozruvcfxyui:[YOUR_DB_PASSWORD]@db.oygrnxxuwozruvcfxyui.supabase.co:5432/postgres
 
 NEXTAUTH_SECRET=your-super-secret-key-change-this-in-production-min-32-chars
 

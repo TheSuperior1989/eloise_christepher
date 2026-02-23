@@ -17,13 +17,13 @@ Your new Supabase project has been created:
 ### For Vercel (Production)
 Use the **Connection Pooling** URL:
 ```
-postgresql://postgres.oygrnxxuwozruvcfxyui:WeddingDB2025!Secure@aws-0-eu-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true
+postgresql://postgres.oygrnxxuwozruvcfxyui:[YOUR_DB_PASSWORD]@aws-0-eu-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true
 ```
 
 ### For Local Development (Migrations)
 Use the **Direct Connection** URL:
 ```
-postgresql://postgres.oygrnxxuwozruvcfxyui:WeddingDB2025!Secure@db.oygrnxxuwozruvcfxyui.supabase.co:5432/postgres
+postgresql://postgres.oygrnxxuwozruvcfxyui:[YOUR_DB_PASSWORD]@db.oygrnxxuwozruvcfxyui.supabase.co:5432/postgres
 ```
 
 ---
@@ -36,7 +36,7 @@ Go to your Vercel project → Settings → Environment Variables and add:
 
 ```env
 # Database
-DATABASE_URL=postgresql://postgres.oygrnxxuwozruvcfxyui:WeddingDB2025!Secure@aws-0-eu-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true
+DATABASE_URL=postgresql://postgres.oygrnxxuwozruvcfxyui:[YOUR_DB_PASSWORD]@aws-0-eu-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true
 
 # NextAuth
 NEXTAUTH_SECRET=<generate-with-openssl-rand-base64-32>
@@ -188,7 +188,7 @@ ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId"
 
 ## 🔐 Database Credentials
 
-**Database Password**: `WeddingDB2025!Secure`
+**Database Password**: `[YOUR_DB_PASSWORD]`
 
 ⚠️ **Important**: Change this password in production!
 

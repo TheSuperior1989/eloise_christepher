@@ -8,21 +8,22 @@ async function main() {
   console.log('Seeding database...')
 
   // Create 3 admin users with real email addresses
+  // Passwords are read from environment variables - set SEED_ADMIN_PASSWORD_1 and SEED_ADMIN_PASSWORD_2 in .env before running
   const adminUsers = [
     {
       name: 'Christiaan von Stade',
       email: 'christiaanvonstade@gmail.com',
-      password: 'Bike2453',
+      password: process.env.SEED_ADMIN_PASSWORD_1 || 'ChangeThisPassword!',
     },
     {
       name: 'Eloise Bissei',
       email: 'eloisebissei@gmail.com',
-      password: 'Eli&Goose',
+      password: process.env.SEED_ADMIN_PASSWORD_2 || 'ChangeThisPassword!',
     },
     {
       name: 'Christepher von Stade',
       email: 'christepher.vonstade@gmail.com',
-      password: 'Eli&Goose',
+      password: process.env.SEED_ADMIN_PASSWORD_2 || 'ChangeThisPassword!',
     },
   ]
 

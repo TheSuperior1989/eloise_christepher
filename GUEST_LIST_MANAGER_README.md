@@ -43,13 +43,13 @@ Authorized admin accounts:
 
 ```
 Email: christiaanvonstade@gmail.com (Developer & Admin)
-Password: Bike2453
+Password: [reset in app]
 
 Email: eloisebissei@gmail.com (Manager)
-Password: Eli&Goose
+Password: [reset in app]
 
 Email: christepher.vonstade@gmail.com (Manager)
-Password: Eli&Goose
+Password: [reset in app]
 ```
 
 **Note**: Only these three email addresses are authorized to access the admin dashboard.
