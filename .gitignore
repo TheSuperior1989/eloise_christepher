@@ -21,8 +21,10 @@ yarn-error.log*
 .env*.local
 .env.production
 
-# credentials (keep for local reference only)
+# credentials (never commit these)
 ADMIN_CREDENTIALS.md
+VERCEL_ENV_VARIABLES.md
+*_ENV_VARIABLES.md
 
 # vercel
 .vercel
