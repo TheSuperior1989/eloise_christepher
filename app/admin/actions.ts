@@ -278,6 +278,10 @@ export async function sendInvitation(guestId: string) {
       }),
     })
 
+    if (emailResult.error) {
+      throw new Error(emailResult.error.message)
+    }
+
     console.log("Email sent successfully:", emailResult)
 
     // Update invitation status
@@ -380,6 +384,10 @@ export async function sendRsvpReminder(guestId: string) {
       }),
     })
 
+    if (emailResult.error) {
+      throw new Error(emailResult.error.message)
+    }
+
     console.log("Reminder email sent successfully:", emailResult)
 
     revalidatePath("/admin/dashboard")
@@ -449,6 +457,10 @@ export async function sendScheduleUpdate(guestId: string) {
         daysUntilWedding,
       }),
     })
+
+    if (emailResult.error) {
+      throw new Error(emailResult.error.message)
+    }
 
     console.log(`Schedule update sent to ${guest.email}:`, emailResult)
     return { success: true, emailId: emailResult.data?.id }
