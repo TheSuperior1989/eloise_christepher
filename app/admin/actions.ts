@@ -8,6 +8,7 @@ import crypto from "crypto"
 import { Resend } from "resend"
 import WeddingInvitationEmail from "@/emails/wedding-invitation"
 import RsvpReminderEmail from "@/emails/rsvp-reminder"
+import ScheduleUpdateEmail from "@/emails/schedule-update"
 
 // Lazy-load Resend client to avoid initialization during build
 function getResendClient() {
@@ -407,6 +408,67 @@ export async function sendBulkRsvpReminders(guestIds: string[]) {
   for (const guestId of guestIds) {
     try {
       await sendRsvpReminder(guestId)
+      results.push({ guestId, success: true })
+    } catch (error) {
+      results.push({ guestId, success: false, error: (error as Error).message })
+    }
+  }
+
+  revalidatePath("/admin/dashboard")
+  return results
+}
+
+// Send schedule update email to a single guest
+export async function sendScheduleUpdate(guestId: string) {
+  const session = await auth()
+  if (!session) {
+    throw new Error("Unauthorized")
+  }
+
+  const guest = await prisma.guest.findUnique({
+    where: { id: guestId },
+  })
+
+  if (!guest || !guest.email) {
+    throw new Error("Guest not found or no email address")
+  }
+
+  const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000"
+  const weddingDate = new Date("2026-04-04T15:30:00")
+  const daysUntilWedding = Math.max(0, Math.floor((weddingDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+
+  try {
+    const resend = getResendClient()
+    const emailResult = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL!,
+      to: guest.email,
+      subject: "📅 Important Schedule Update — Eloise & Christepher's Wedding",
+      react: ScheduleUpdateEmail({
+        guestName: `${guest.firstName} ${guest.lastName}`,
+        websiteUrl: baseUrl,
+        daysUntilWedding,
+      }),
+    })
+
+    console.log(`Schedule update sent to ${guest.email}:`, emailResult)
+    return { success: true, emailId: emailResult.data?.id }
+  } catch (error) {
+    console.error("Failed to send schedule update:", error)
+    throw new Error(`Failed to send schedule update: ${error instanceof Error ? error.message : "Unknown error"}`)
+  }
+}
+
+// Send schedule update email to multiple guests
+export async function sendBulkScheduleUpdates(guestIds: string[]) {
+  const session = await auth()
+  if (!session) {
+    throw new Error("Unauthorized")
+  }
+
+  const results = []
+  for (const guestId of guestIds) {
+    try {
+      await sendScheduleUpdate(guestId)
       results.push({ guestId, success: true })
     } catch (error) {
       results.push({ guestId, success: false, error: (error as Error).message })
