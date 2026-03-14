@@ -459,14 +459,16 @@ export async function sendScheduleUpdate(guestId: string) {
     })
 
     if (emailResult.error) {
-      throw new Error(emailResult.error.message)
+      console.error("Resend error:", emailResult.error)
+      return { success: false, error: emailResult.error.message }
     }
 
     console.log(`Schedule update sent to ${guest.email}:`, emailResult)
     return { success: true, emailId: emailResult.data?.id }
   } catch (error) {
-    console.error("Failed to send schedule update:", error)
-    throw new Error(`Failed to send schedule update: ${error instanceof Error ? error.message : "Unknown error"}`)
+    const message = error instanceof Error ? error.message : "Unknown error"
+    console.error("Failed to send schedule update:", message)
+    return { success: false, error: message }
   }
 }
 

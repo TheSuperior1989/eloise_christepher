@@ -368,8 +368,14 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
     for (const guest of eligibleGuests) {
       try {
         const { sendScheduleUpdate } = await import("@/app/admin/actions")
-        await sendScheduleUpdate(guest.id)
-        successCount++
+        const result = await sendScheduleUpdate(guest.id)
+        if (result.success) {
+          successCount++
+        } else {
+          failCount++
+          console.error(`Resend error for guest ${guest.id}:`, result.error)
+          toast.error(`Email failed: ${result.error}`)
+        }
       } catch (error) {
         failCount++
         console.error(`Failed to send schedule update to guest ${guest.id}:`, error)
