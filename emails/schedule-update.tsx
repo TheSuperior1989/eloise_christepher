@@ -56,7 +56,7 @@ export default function ScheduleUpdateEmail({
                   Dear {guestName},
                 </Text>
                 <Text style={bodyText}>
-                  We are absolutely overflowing with excitement as our wedding day draws closer{days > 0 ? ` — just <strong>${days} days</strong> away` : ""}! We cannot wait to celebrate this incredible milestone with the people we love most, and that means <em>you</em>.
+                  We are absolutely overflowing with excitement as our wedding day draws closer{days > 0 ? <> — just <strong>{days} days</strong> away</> : ""}! We cannot wait to celebrate this incredible milestone with the people we love most, and that means <em>you</em>.
                 </Text>
                 <Text style={bodyText}>
                   We want to make sure everything runs perfectly on the day, so we are reaching out with one small but important update to the arrival schedule.
