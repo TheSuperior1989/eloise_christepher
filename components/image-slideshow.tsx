@@ -396,13 +396,15 @@ export function ImageSlideshow() {
       {/* Lightbox */}
       {lightbox && (
         <div
-          className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center"
+          className="fixed inset-0 bg-black/95 flex items-center justify-center"
+          style={{ zIndex: 9999 }}
           onClick={closeLightbox}
         >
           {/* Close button */}
           <button
-            onClick={closeLightbox}
-            className="fixed top-4 right-4 z-[110] w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-2xl hover:bg-[#FAF8F5] transition-colors"
+            onClick={(e) => { e.stopPropagation(); closeLightbox() }}
+            className="absolute top-4 right-4 w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-2xl hover:bg-[#FAF8F5] transition-colors"
+            style={{ zIndex: 10001 }}
             aria-label="Close photo"
           >
             <X className="h-6 w-6 text-[#3D3630]" strokeWidth={2.5} />
@@ -411,7 +413,8 @@ export function ImageSlideshow() {
           {/* Prev button */}
           <button
             onClick={(e) => { e.stopPropagation(); lightboxPrev() }}
-            className="fixed left-4 top-1/2 -translate-y-1/2 z-[110] w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow-xl hover:bg-white transition-colors"
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow-xl hover:bg-white transition-colors"
+            style={{ zIndex: 10001 }}
             aria-label="Previous photo"
           >
             <ChevronLeft className="h-6 w-6 text-[#3D3630]" strokeWidth={2.5} />
@@ -420,7 +423,8 @@ export function ImageSlideshow() {
           {/* Next button */}
           <button
             onClick={(e) => { e.stopPropagation(); lightboxNext() }}
-            className="fixed right-4 top-1/2 -translate-y-1/2 z-[110] w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow-xl hover:bg-white transition-colors"
+            className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow-xl hover:bg-white transition-colors"
+            style={{ zIndex: 10001 }}
             aria-label="Next photo"
           >
             <ChevronRight className="h-6 w-6 text-[#3D3630]" strokeWidth={2.5} />
@@ -428,7 +432,7 @@ export function ImageSlideshow() {
 
           {/* Image */}
           <div
-            className="relative w-full h-full max-w-7xl max-h-[90vh] mx-4"
+            className="relative w-full h-full max-w-5xl mx-16 my-16"
             onClick={(e) => e.stopPropagation()}
           >
             <Image
@@ -442,7 +446,10 @@ export function ImageSlideshow() {
           </div>
 
           {/* Counter */}
-          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[110] bg-black/60 text-white text-sm px-4 py-1.5 rounded-full">
+          <div
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white text-sm px-4 py-1.5 rounded-full"
+            style={{ zIndex: 10001 }}
+          >
             {lightbox.index + 1} / {currentImages.length}
           </div>
         </div>
