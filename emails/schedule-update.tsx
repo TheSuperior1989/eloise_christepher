@@ -106,6 +106,20 @@ export default function ScheduleUpdateEmail({
 
               <div style={divider} />
 
+              {/* RSVP Confirmation */}
+              <Section style={rsvpSection}>
+                <Text style={rsvpHeading}>📋 RSVP Confirmation</Text>
+                <Text style={bodyText}>
+                  If your plans have changed or you are no longer able to make it, please let us know as soon as possible so we can update our arrangements with the venue and caterers.
+                </Text>
+                <div style={rsvpContactBox}>
+                  <Text style={rsvpContactLabel}>Contact Elly directly:</Text>
+                  <Text style={rsvpContactNumber}>+27 72 967 6913</Text>
+                </div>
+              </Section>
+
+              <div style={divider} />
+
               {/* Footer */}
               <Section style={footer}>
                 <Text style={footerText}>
@@ -316,4 +330,41 @@ const footerMeta = {
   color: "#A89880",
   margin: "0",
   letterSpacing: "0.3px",
+}
+
+const rsvpSection = {
+  marginBottom: "4px",
+}
+
+const rsvpHeading = {
+  fontFamily: '"Playfair Display", Georgia, serif',
+  fontSize: "20px",
+  fontWeight: "700" as const,
+  color: "#3D3630",
+  margin: "0 0 16px",
+}
+
+const rsvpContactBox = {
+  backgroundColor: "#FFF8F0",
+  border: "1px solid #C4A57B",
+  borderLeft: "4px solid #C4A57B",
+  borderRadius: "8px",
+  padding: "16px 24px",
+  textAlign: "center" as const,
+}
+
+const rsvpContactLabel = {
+  fontSize: "13px",
+  color: "#7A6F5D",
+  fontWeight: "600" as const,
+  margin: "0 0 6px",
+  letterSpacing: "0.3px",
+}
+
+const rsvpContactNumber = {
+  fontSize: "22px",
+  fontWeight: "700" as const,
+  color: "#C4A57B",
+  margin: "0",
+  letterSpacing: "0.5px",
 }
