@@ -66,6 +66,11 @@ export function QASection() {
       answer:
         'Please arrive at least 20 minutes before the ceremony begins to give yourself time to travel, find your seat, and settle in before we say "I do."',
     },
+    {
+      question: "Is there a cash bar?",
+      answer:
+        "Please note that the venue operates card facilities only — there will be no cash bar. Please ensure you have your bank card with you for any purchases at the bar.",
+    },
   ]
 
   return (

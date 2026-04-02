@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Guest, InvitationStatus, RsvpStatus, AttendanceDay } from "@prisma/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Plus, LogOut, Search, Mail, RefreshCw, Filter, Download, X, Users, Home, Bell, CalendarClock } from "lucide-react"
+import { Plus, LogOut, Search, Mail, RefreshCw, Filter, Download, X, Users, Home, Bell, CalendarClock, CreditCard } from "lucide-react"
 import Link from "next/link"
 import { signOut } from "next-auth/react"
 import { GuestTable } from "./guest-table"
@@ -42,6 +42,7 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
   const [isAttendanceDialogOpen, setIsAttendanceDialogOpen] = useState(false)
   const [isSendingReminders, setIsSendingReminders] = useState(false)
   const [isSendingScheduleUpdate, setIsSendingScheduleUpdate] = useState(false)
+  const [isSendingCardNotice, setIsSendingCardNotice] = useState(false)
 
   const handleRefresh = () => {
     setIsRefreshing(true)
@@ -389,6 +390,56 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
     if (failCount > 0) toast.error(`Failed to send to ${failCount} guest(s)`)
   }
 
+  const handleBulkSendCardNotice = async () => {
+    if (selectedGuests.length === 0) {
+      toast.error("Please select at least one guest")
+      return
+    }
+
+    const eligibleGuests = guests.filter(g =>
+      selectedGuests.includes(g.id) && g.email
+    )
+
+    if (eligibleGuests.length === 0) {
+      toast.error("No selected guests have an email address on file.")
+      return
+    }
+
+    const skipped = selectedGuests.length - eligibleGuests.length
+    const confirmed = confirm(
+      `Send the card-facilities notice to ${eligibleGuests.length} guest(s)?` +
+      (skipped > 0 ? `\n\n(${skipped} guest(s) skipped — no email address on file)` : "")
+    )
+    if (!confirmed) return
+
+    setIsSendingCardNotice(true)
+    let successCount = 0
+    let failCount = 0
+
+    for (const guest of eligibleGuests) {
+      try {
+        const { sendCardNotice } = await import("@/app/admin/actions")
+        const result = await sendCardNotice(guest.id)
+        if (result.success) {
+          successCount++
+        } else {
+          failCount++
+          console.error(`Resend error for guest ${guest.id}:`, result.error)
+          toast.error(`Email failed: ${result.error}`)
+        }
+      } catch (error) {
+        failCount++
+        console.error(`Failed to send card notice to guest ${guest.id}:`, error)
+      }
+    }
+
+    setIsSendingCardNotice(false)
+    setSelectedGuests([])
+
+    if (successCount > 0) toast.success(`Card notice sent to ${successCount} guest(s) ✓`)
+    if (failCount > 0) toast.error(`Failed to send to ${failCount} guest(s)`)
+  }
+
   const filteredGuests = guests.filter((guest) => {
     const query = searchQuery.toLowerCase()
     const matchesSearch = (
@@ -629,6 +680,14 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
               >
                 <CalendarClock className="h-4 w-4" />
                 {isSendingScheduleUpdate ? "Sending..." : `Send Schedule Update (${selectedGuests.length})`}
+              </Button>
+              <Button
+                onClick={handleBulkSendCardNotice}
+                className="bg-[#6B7F6B] hover:bg-[#5A6E5A] text-white gap-2"
+                disabled={isSendingCardNotice}
+              >
+                <CreditCard className="h-4 w-4" />
+                {isSendingCardNotice ? "Sending..." : `Send Card Notice (${selectedGuests.length})`}
               </Button>
               <Button
                 onClick={handleBulkSendInvitations}
