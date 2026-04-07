@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Guest, InvitationStatus, RsvpStatus, AttendanceDay } from "@prisma/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Plus, LogOut, Search, Mail, RefreshCw, Filter, Download, X, Users, Home, Bell, CalendarClock, CreditCard } from "lucide-react"
+import { Plus, LogOut, Search, Mail, RefreshCw, Filter, Download, X, Users, Home, Bell, CalendarClock, CreditCard, Star } from "lucide-react"
 import Link from "next/link"
 import { signOut } from "next-auth/react"
 import { GuestTable } from "./guest-table"
@@ -43,6 +43,7 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
   const [isSendingReminders, setIsSendingReminders] = useState(false)
   const [isSendingScheduleUpdate, setIsSendingScheduleUpdate] = useState(false)
   const [isSendingCardNotice, setIsSendingCardNotice] = useState(false)
+  const [isSendingReviewRequests, setIsSendingReviewRequests] = useState(false)
 
   const handleRefresh = () => {
     setIsRefreshing(true)
@@ -235,6 +236,52 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
     if (failCount > 0) {
       toast.error(`Failed to send ${failCount} reminder(s)`)
     }
+  }
+
+  const handleBulkSendReviewRequests = async () => {
+    if (selectedGuests.length === 0) {
+      toast.error("Please select at least one guest")
+      return
+    }
+
+    const eligibleGuests = guests.filter(g => selectedGuests.includes(g.id) && g.email)
+
+    if (eligibleGuests.length === 0) {
+      toast.error("No selected guests have an email address on file.")
+      return
+    }
+
+    const skipped = selectedGuests.length - eligibleGuests.length
+    const confirmed = confirm(
+      `Send a review request to ${eligibleGuests.length} guest(s)?` +
+      (skipped > 0 ? `\n\n(${skipped} guest(s) skipped — no email on file)` : "")
+    )
+    if (!confirmed) return
+
+    setIsSendingReviewRequests(true)
+    let successCount = 0
+    let failCount = 0
+
+    for (const guest of eligibleGuests) {
+      try {
+        const { sendReviewRequest } = await import("@/app/admin/actions")
+        const result = await sendReviewRequest(guest.id)
+        if (result.success) {
+          successCount++
+        } else {
+          failCount++
+        }
+      } catch (error) {
+        failCount++
+        console.error(`Failed to send review request to guest ${guest.id}:`, error)
+      }
+    }
+
+    setIsSendingReviewRequests(false)
+    setSelectedGuests([])
+
+    if (successCount > 0) toast.success(`Review request sent to ${successCount} guest(s) ✓`)
+    if (failCount > 0) toast.error(`Failed to send to ${failCount} guest(s)`)
   }
 
   const handleBulkResetRsvp = async () => {
@@ -696,6 +743,14 @@ export function GuestListManager({ initialGuests, session }: GuestListManagerPro
               >
                 <Mail className="h-4 w-4" />
                 {isSendingBulk ? "Sending..." : `Send Invitations (${selectedGuests.length})`}
+              </Button>
+              <Button
+                onClick={handleBulkSendReviewRequests}
+                className="bg-[#7B9E87] hover:bg-[#6A8D76] text-white gap-2"
+                disabled={isSendingReviewRequests}
+              >
+                <Star className="h-4 w-4" />
+                {isSendingReviewRequests ? "Sending..." : `Send Review Requests (${selectedGuests.length})`}
               </Button>
               <Button
                 onClick={handleBulkSendReminders}

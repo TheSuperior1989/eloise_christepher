@@ -13,14 +13,14 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Mail, Edit, Trash2, MoreHorizontal, Bell } from "lucide-react"
+import { Mail, Edit, Trash2, MoreHorizontal, Bell, Star } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { deleteGuest, sendInvitation, sendRsvpReminder } from "@/app/admin/actions"
+import { deleteGuest, sendInvitation, sendRsvpReminder, sendReviewRequest } from "@/app/admin/actions"
 import { EditGuestDialog } from "./edit-guest-dialog"
 import { toast } from "sonner"
 
@@ -35,6 +35,7 @@ export function GuestTable({ guests, onGuestsChange, selectedGuests, onSelection
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null)
   const [sendingInvitation, setSendingInvitation] = useState<string | null>(null)
   const [sendingReminder, setSendingReminder] = useState<string | null>(null)
+  const [sendingReview, setSendingReview] = useState<string | null>(null)
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this guest?")) return
@@ -119,6 +120,26 @@ export function GuestTable({ guests, onGuestsChange, selectedGuests, onSelection
     }
     const config = variants[status] || variants.PENDING
     return <Badge className={config.className}>{config.label}</Badge>
+  }
+
+  const handleSendReviewRequest = async (guest: Guest) => {
+    if (!guest.email) {
+      toast.error("Guest has no email address")
+      return
+    }
+    setSendingReview(guest.id)
+    try {
+      const result = await sendReviewRequest(guest.id)
+      if (result.success) {
+        toast.success(`Review request sent to ${guest.firstName} ${guest.lastName}`)
+      } else {
+        toast.error(result.error || "Failed to send review request")
+      }
+    } catch (error) {
+      toast.error("Failed to send review request")
+    } finally {
+      setSendingReview(null)
+    }
   }
 
   const handleSelectAll = (checked: boolean) => {
@@ -228,6 +249,13 @@ export function GuestTable({ guests, onGuestsChange, selectedGuests, onSelection
                         >
                           <Bell className="h-4 w-4 mr-2" />
                           {sendingReminder === guest.id ? "Sending..." : "Send RSVP Reminder"}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleSendReviewRequest(guest)}
+                          disabled={!guest.email || sendingReview === guest.id}
+                        >
+                          <Star className="h-4 w-4 mr-2" />
+                          {sendingReview === guest.id ? "Sending..." : "Send Review Request"}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => handleDelete(guest.id)}

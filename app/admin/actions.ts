@@ -10,6 +10,7 @@ import WeddingInvitationEmail from "@/emails/wedding-invitation"
 import RsvpReminderEmail from "@/emails/rsvp-reminder"
 import ScheduleUpdateEmail from "@/emails/schedule-update"
 import CardNoticeEmail from "@/emails/card-notice"
+import ReviewRequestEmail from "@/emails/review-request"
 
 // Lazy-load Resend client to avoid initialization during build
 function getResendClient() {
@@ -538,6 +539,56 @@ export async function sendBulkCardNotices(guestIds: string[]) {
 
   revalidatePath("/admin/dashboard")
   return results
+}
+
+// Send review request email to a single guest
+export async function sendReviewRequest(guestId: string) {
+  const session = await auth()
+  if (!session) throw new Error("Unauthorized")
+
+  const guest = await prisma.guest.findUnique({ where: { id: guestId } })
+  if (!guest || !guest.email) throw new Error("Guest not found or no email address")
+
+  const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+
+  // Create a review token for this guest (or reuse existing unused one)
+  const existing = await prisma.reviewToken.findFirst({
+    where: { guestEmail: guest.email, usedAt: null },
+  })
+
+  const reviewToken = existing ?? await prisma.reviewToken.create({
+    data: {
+      guestName: `${guest.firstName} ${guest.lastName}`,
+      guestEmail: guest.email,
+    },
+  })
+
+  const reviewUrl = `${baseUrl}/review/${reviewToken.token}`
+
+  try {
+    const resend = getResendClient()
+    const emailResult = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL!,
+      to: guest.email,
+      subject: "We'd love your feedback — Eloise & Christepher's Wedding",
+      react: ReviewRequestEmail({
+        guestName: `${guest.firstName} ${guest.lastName}`,
+        reviewUrl,
+      }),
+    })
+
+    if (emailResult.error) {
+      console.error("Resend error:", emailResult.error)
+      return { success: false, error: emailResult.error.message }
+    }
+
+    console.log(`Review request sent to ${guest.email}:`, emailResult)
+    return { success: true, emailId: emailResult.data?.id, reviewUrl }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error"
+    console.error("Failed to send review request:", message)
+    return { success: false, error: message }
+  }
 }
 
 // Send schedule update email to multiple guests
