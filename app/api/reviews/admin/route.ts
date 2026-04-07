@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma"
 export async function GET(request: NextRequest) {
   const secret = request.headers.get("x-admin-secret")
 
-  if (!secret || secret !== process.env.REVIEW_ADMIN_SECRET) {
+  if (!secret || secret !== process.env.REVIEW_ADMIN_SECRET?.trim()) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
