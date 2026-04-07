@@ -105,3 +105,38 @@ enum AttendanceDay {
   BOTH
   NOT_SLEEPING_OVER
 }
+
+// Post-wedding review system (data collected for IDOSA marketplace research)
+model ReviewToken {
+  id          String         @id @default(cuid())
+  token       String         @unique @default(cuid())
+  guestName   String
+  guestEmail  String
+  usedAt      DateTime?
+  createdAt   DateTime       @default(now())
+
+  review      WeddingReview?
+
+  @@index([token])
+}
+
+model WeddingReview {
+  id                String      @id @default(cuid())
+  tokenId           String      @unique
+  guestName         String
+  guestEmail        String
+  overallRating     Int         // 1–5 stars
+  npsScore          Int         // 0–10: likelihood to recommend a similar wedding experience
+  venueRating       Int?        // 1–5
+  cateringRating    Int?        // 1–5
+  photographyRating Int?        // 1–5
+  musicRating       Int?        // 1–5
+  ceremonyRating    Int?        // 1–5
+  highlights        String?
+  improvements      String?
+  comments          String?
+  wouldRecommend    Boolean     @default(true)
+  submittedAt       DateTime    @default(now())
+
+  token             ReviewToken @relation(fields: [tokenId], references: [id])
+}
